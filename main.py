@@ -1,20 +1,63 @@
 import pygame, sys
-
+import spritesheet
+#TODO : At the end, clean up the main file and add stuff to other files, like constants and stuff
 pygame.init()
 pygame.mixer.init()
 
+#Screen constants
 screenWidth = 1300
 screenHeight = 645
 screen = pygame.display.set_mode((screenWidth, screenHeight))
-
-
-# font = pygame.font.Font("PressStart2P.ttf")
+#Sprite Sheet Information and Text Color
+imageSpriteSheet = pygame.image.load("assets/images/B i g  r o a d.png").convert_alpha()
+spriteSheet = spritesheet.SpriteSheet(imageSpriteSheet)
 textColor = (255,255,255)
+#Animation process
+animationList = []
+animationLoop = 5
+animationCooldown = 20
 
+for x in range(animationLoop):
+    animationList.append(spriteSheet.getImage(x, 100, 100, 7))
+
+#Text function
 def drawText(text, fontSize, textCol, x, y):
     font = pygame.font.Font("assets/font/PressStart2P.ttf", fontSize)
     text_surface = font.render(text, True, textCol)
     screen.blit(text_surface, (x,y))
+#Screen Event Handlers
+def playScreen():
+    pygame.display.set_caption("Game")
+    pygame.mixer.music.load("assets/sounds/gameSong.mp3")
+    pygame.mixer.music.play(-1)
+    run = True
+    lastUpdate = pygame.time.get_ticks()
+    frame = 0
+
+    while run:
+        screen.fill((50,50,50))
+
+        currentTime = pygame.time.get_ticks()
+        if currentTime - lastUpdate >= animationCooldown:
+            frame +=1
+            lastUpdate = currentTime
+            if frame >= len(animationList):
+                frame = 0
+
+        screen.blit(animationList[frame], (300,0))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run == False
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.type == pygame.K_SPACE:
+                    mainMenu()
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+        pygame.display.update()
 
 def controlsMenu():
     pygame.display.set_caption("Controls")
@@ -53,6 +96,8 @@ def mainMenu():
             if event.type == pygame.QUIT:
                 run = False
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    playScreen()
                 if event.key == pygame.K_SPACE:
                     controlsMenu()
                 if event.key == pygame.K_ESCAPE:
