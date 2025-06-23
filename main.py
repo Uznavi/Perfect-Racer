@@ -12,7 +12,7 @@ screen = pygame.display.set_mode((screenWidth, screenHeight))
 textColor = (255,255,255)
 
 def drawText(text, fontSize, textCol, x, y):
-    font = pygame.font.Font("PressStart2P.ttf", fontSize)
+    font = pygame.font.Font("assets/font/PressStart2P.ttf", fontSize)
     text_surface = font.render(text, True, textCol)
     screen.blit(text_surface, (x,y))
 
@@ -41,7 +41,7 @@ def controlsMenu():
 def mainMenu():
     pygame.display.set_caption("Main Menu")
     # Load and play music once at the start
-    pygame.mixer.music.load("intro.mp3")
+    pygame.mixer.music.load("assets/sounds/intro.mp3")
     pygame.mixer.music.play()
     run = True
     while run:
