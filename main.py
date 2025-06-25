@@ -1,8 +1,13 @@
 import pygame, sys
 import spritesheet
+from playerCar import PlayerCar
 #TODO : At the end, clean up the main file and add stuff to other files, like constants and stuff
 pygame.init()
 pygame.mixer.init()
+
+fps = 60
+clock = pygame.time.Clock()
+
 
 #Screen constants
 screenWidth = 1300
@@ -15,7 +20,10 @@ textColor = (255,255,255)
 #Animation process
 animationList = []
 animationLoop = 5
-animationCooldown = 20
+animationCooldown = 10
+player = PlayerCar()
+spriteGroup = pygame.sprite.Group()
+spriteGroup.add(player)
 
 for x in range(animationLoop):
     animationList.append(spriteSheet.getImage(x, 100, 100, 7))
@@ -36,6 +44,7 @@ def playScreen():
 
     while run:
         screen.fill((50,50,50))
+        clock.tick(fps)
 
         currentTime = pygame.time.get_ticks()
         if currentTime - lastUpdate >= animationCooldown:
@@ -52,11 +61,29 @@ def playScreen():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                if event.type == pygame.K_SPACE:
-                    mainMenu()
+                if event.key == pygame.K_a:
+                    player.vel_x = -player.speed
+                if event.key == pygame.K_d:
+                    player.vel_x = player.speed
+                if event.key == pygame.K_w:
+                    player.vel_y = -player.speed
+                if event.key == pygame.K_s:
+                    player.vel_y = player.speed
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_a:
+                    player.vel_x = 0
+                if event.key == pygame.K_d:
+                    player.vel_x = 0
+                if event.key == pygame.K_w:
+                    player.vel_y = 0
+                if event.key == pygame.K_s:
+                    player.vel_y = 0
+        spriteGroup.draw(screen)
+        spriteGroup.update()
+        # spriteGroup.draw(screen)
         pygame.display.update()
 
 def controlsMenu():
@@ -64,6 +91,7 @@ def controlsMenu():
     run = True
     while run:
         screen.fill((0,0,0))
+        clock.tick(fps)
         drawText("CONTROLS", 40, textColor, 500, 125)
         drawText("D-Pad: Directional Movement (Up, Down, Left, Right)", 20, textColor, 175, 350)
         drawText("Y: Power-Up (Can only be used when in inventory)", 20, textColor, 200, 395)
@@ -88,6 +116,7 @@ def mainMenu():
     pygame.mixer.music.play()
     run = True
     while run:
+        clock.tick(fps)
         screen.fill((0,0,255))
         drawText("PERFECT RACER", 40, textColor, 400, 125)
         drawText("Press Start to begin", 20, textColor, 435, 350)
