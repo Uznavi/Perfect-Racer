@@ -8,11 +8,15 @@ pygame.mixer.init()
 fps = 60
 clock = pygame.time.Clock()
 
-
+#For now I'll keep these guys here, after the initial playtesting I'll decide to bring them back
+#That being said if I need to bring them back, then I'll have to scale it all over again, fml
+#HEY YOU! PLAYTESTER! JUST LIKE IT THIS WAY, PLEASE
+#P.S. why are you reading this? you fucking nerd ☝️🤓
 #Screen constants
-screenWidth = 1300
-screenHeight = 645
-screen = pygame.display.set_mode((screenWidth, screenHeight))
+# screenWidth = 1300
+# screenHeight = 645
+# screen = pygame.display.set_mode((screenWidth, screenHeight), pygame.RESIZABLE)
+screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 #Sprite Sheet Information and Text Color
 imageSpriteSheet = pygame.image.load("assets/images/B i g  r o a d.png").convert_alpha()
 spriteSheet = spritesheet.SpriteSheet(imageSpriteSheet)
@@ -26,7 +30,7 @@ spriteGroup = pygame.sprite.Group()
 spriteGroup.add(player)
 
 for x in range(animationLoop):
-    animationList.append(spriteSheet.getImage(x, 100, 100, 7))
+    animationList.append(spriteSheet.getImage(x, 100, 100, 7.18))
 
 #Text function
 def drawText(text, fontSize, textCol, x, y):
@@ -41,10 +45,12 @@ def playScreen():
     run = True
     lastUpdate = pygame.time.get_ticks()
     frame = 0
+    score = 0
 
     while run:
         screen.fill((50,50,50))
         clock.tick(fps)
+        score +=1
 
         currentTime = pygame.time.get_ticks()
         if currentTime - lastUpdate >= animationCooldown:
@@ -54,6 +60,7 @@ def playScreen():
                 frame = 0
 
         screen.blit(animationList[frame], (300,0))
+        drawText(f"Score: {score}", 20, textColor, 1025, 450)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -92,10 +99,10 @@ def controlsMenu():
     while run:
         screen.fill((0,0,0))
         clock.tick(fps)
-        drawText("CONTROLS", 40, textColor, 500, 125)
-        drawText("D-Pad: Directional Movement (Up, Down, Left, Right)", 20, textColor, 175, 350)
-        drawText("Y: Power-Up (Can only be used when in inventory)", 20, textColor, 200, 395)
-        drawText("Press Select/Space again to go back to the title screen", 10, textColor, 400, 500)
+        drawText("CONTROLS", 40, textColor, 470, 125)
+        drawText("D-Pad: Directional Movement (Up, Down, Left, Right)", 20, textColor, 135, 350)
+        drawText("Y: Power-Up (Can only be used when in inventory)", 20, textColor, 165, 395)
+        drawText("Press Select/Space again to go back to the title screen", 10, textColor, 370, 500)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -118,9 +125,9 @@ def mainMenu():
     while run:
         clock.tick(fps)
         screen.fill((0,0,255))
-        drawText("PERFECT RACER", 40, textColor, 400, 125)
-        drawText("Press Start to begin", 20, textColor, 435, 350)
-        drawText("Or press Select for the controls!", 20, textColor, 340, 395)
+        drawText("PERFECT RACER", 40, textColor, 375, 200)
+        drawText("Press Start to begin", 20, textColor, 415, 450)
+        drawText("Or press Select for the controls!", 20, textColor, 315, 495)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False

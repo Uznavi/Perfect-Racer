@@ -9,10 +9,11 @@ class PlayerCar(pygame.sprite.Sprite):
         #605 is the middle of the screen
         #550 is the bottom of the screen
         self.rect.x = 605
-        self.rect.y = 550
+        self.rect.y = 625
         self.vel_x = 0 #initial speeds
         self.vel_y = 0
         self.speed = 5 # Speed of movement, will be changed depending on the feel
+                       # Depending on the playtests, I'll change it, but at the same time, it feels good, so it won't be changed :D
 
     def update(self):
         #Adding velocity to the coordinates to make movement
@@ -23,8 +24,8 @@ class PlayerCar(pygame.sprite.Sprite):
         if self.rect.x >= 715:
             self.rect.x = 715
         self.rect.y += self.vel_y
-        if self.rect.y >= 550:
-            self.rect.y = 550
+        if self.rect.y >= 625:
+            self.rect.y = 625
         if self.rect.y <=0:
             self.rect.y = 0
 
