@@ -6,9 +6,9 @@ class PlayerCar(pygame.sprite.Sprite):
         self.image = pygame.image.load("assets/images/PlayerCar.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width()*1.5, self.image.get_height()*1.5))
         self.rect = self.image.get_rect()
-        #605 is the middle of the screen
+        #615 is the middle of the screen
         #550 is the bottom of the screen
-        self.rect.x = 605
+        self.rect.x = 615
         self.rect.y = 625
         self.vel_x = 0 #initial speeds
         self.vel_y = 0

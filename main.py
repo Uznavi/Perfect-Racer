@@ -1,6 +1,7 @@
 import pygame, sys
 import spritesheet
 from playerCar import PlayerCar
+from enemySpawner import EnemySpawner
 #TODO : At the end, clean up the main file and add stuff to other files, like constants and stuff
 pygame.init()
 pygame.mixer.init()
@@ -12,6 +13,7 @@ clock = pygame.time.Clock()
 #That being said if I need to bring them back, then I'll have to scale it all over again, fml
 #HEY YOU! PLAYTESTER! JUST LIKE IT THIS WAY, PLEASE
 #P.S. why are you reading this? you fucking nerd ☝️🤓
+
 #Screen constants
 # screenWidth = 1300
 # screenHeight = 645
@@ -26,6 +28,7 @@ animationList = []
 animationLoop = 5
 animationCooldown = 10
 player = PlayerCar()
+enemy_spawner = EnemySpawner()
 spriteGroup = pygame.sprite.Group()
 spriteGroup.add(player)
 
@@ -39,6 +42,7 @@ def drawText(text, fontSize, textCol, x, y):
     screen.blit(text_surface, (x,y))
 #Screen Event Handlers
 def playScreen():
+    #TODO: Since this is the meat and bones of the game, try to make it clearer what is an object and what is the object update function
     pygame.display.set_caption("Game")
     pygame.mixer.music.load("assets/sounds/gameSong.mp3")
     pygame.mixer.music.play(-1)
@@ -90,7 +94,8 @@ def playScreen():
                     player.vel_y = 0
         spriteGroup.draw(screen)
         spriteGroup.update()
-        # spriteGroup.draw(screen)
+        enemy_spawner.enemy_group.draw(screen)
+        enemy_spawner.update()
         pygame.display.update()
 
 def controlsMenu():
