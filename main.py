@@ -27,20 +27,39 @@ textColor = (255,255,255)
 animationList = []
 animationLoop = 5
 animationCooldown = 10
-player = PlayerCar()
-enemy_spawner = EnemySpawner()
-spriteGroup = pygame.sprite.Group()
-spriteGroup.add(player)
 
 for x in range(animationLoop):
     animationList.append(spriteSheet.getImage(x, 100, 100, 7.15))
 
 #Text function
+#TODO: At some point, make a constant x and y variable to not add a new one every time
 def drawText(text, fontSize, textCol, x, y):
     font = pygame.font.Font("assets/font/PressStart2P.ttf", fontSize)
     text_surface = font.render(text, True, textCol)
     screen.blit(text_surface, (x,y))
 #Screen Event Handlers
+
+def gameOverScreen(score):
+    gameOverState = True
+    while gameOverState:
+        screen.fill((0,0,0))
+        drawText("YOU CRASHED!", 40, (255,0,0), 405, 185)
+        drawText(f"Your score: {score}", 30, textColor, 425, 340)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+                if event.key == pygame.K_RETURN:
+                    gameOverState = False
+                    playScreen()
+                if event.key == pygame.K_SPACE:
+                    mainMenu()
+        pygame.display.update()
+
 
 def pauseScreen():
     # During the playtest, ask to see if they mind the pause music. It's just that I wanted the game song to resume from where it left 
@@ -83,6 +102,13 @@ def playScreen():
     lastUpdate = pygame.time.get_ticks()
     frame = 0
     score = 0
+    showHitboxes = False
+
+    #Game objects
+    player = PlayerCar()
+    enemy_spawner = EnemySpawner()
+    spriteGroup = pygame.sprite.Group()
+    spriteGroup.add(player)
 
     while run:
         screen.fill((50,50,50))
@@ -102,6 +128,15 @@ def playScreen():
         screen.blit(frame_image, (x, y))
         drawText(f"Score: {score}", 20, textColor, 1025, 450)
 
+        if pygame.sprite.spritecollideany(player, enemy_spawner.enemy_group):
+            gameOverScreen(score)
+        
+        if showHitboxes:        
+            for enemy in enemy_spawner.enemy_group:
+                pygame.draw.rect(screen, (255,0,0), enemy.rect, 2)
+                pygame.draw.rect(screen, (0,255,0), player.rect, 2)
+
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run == False
@@ -118,6 +153,8 @@ def playScreen():
                     player.vel_y = -player.speed
                 if event.key == pygame.K_s:
                     player.vel_y = player.speed
+                if event.key == pygame.K_h: #SUPER COOL AND EPIC DEBUGGING KEY THAT ALLOWS YOU TO SEE
+                    showHitboxes = not showHitboxes #THE FUCKING HITBOXES
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()

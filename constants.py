@@ -1,4 +1,4 @@
-LANE_X_POSITION = [485, 525, 562, 595, 633, 667, 705]
+LANE_X_POSITION = [530, 608, 645, 678, 755]
 #                 F.L  F.M.L  C.L  C  C.R  F.M.R F.R
 #LEGEND: 
 # F.L = Far left

@@ -1,1 +1,1 @@
-from enemySpawner import EnemySpawner
+pygame.draw.rect(screen, (0,255,0), player.rect, 2)

@@ -16,7 +16,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.image.load(imagePath).convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width()*1.5, self.image.get_height()*1.5))
         self.rect = self.image.get_rect()
-        self.rect.x = LANE_X_POSITION[lane_idx]
+        self.rect.centerx = LANE_X_POSITION[lane_idx]
         self.rect.y = -self.rect.height
         self.vel_x = 0
         self.vel_y = random.randrange(3,8)
