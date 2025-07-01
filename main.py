@@ -33,7 +33,7 @@ spriteGroup = pygame.sprite.Group()
 spriteGroup.add(player)
 
 for x in range(animationLoop):
-    animationList.append(spriteSheet.getImage(x, 100, 100, 7.18))
+    animationList.append(spriteSheet.getImage(x, 100, 100, 7.15))
 
 #Text function
 def drawText(text, fontSize, textCol, x, y):
@@ -41,6 +41,39 @@ def drawText(text, fontSize, textCol, x, y):
     text_surface = font.render(text, True, textCol)
     screen.blit(text_surface, (x,y))
 #Screen Event Handlers
+
+def pauseScreen():
+    # During the playtest, ask to see if they mind the pause music. It's just that I wanted the game song to resume from where it left 
+    #off when paused but apparently that can't be done so just ask everyone how they feel about it and if the pause song should stay
+    pygame.mixer.music.load("assets/sounds/pause.mp3")
+    pygame.mixer.music.play(-1)
+    paused = True
+
+    overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
+    overlay.fill((0,0,0,128))
+
+    screen.blit(overlay, (0,0))
+    drawText("PAUSED", 40, textColor, 525, 300)
+    drawText("Press Start/Enter to resume", 20, textColor, 380, 400)
+    pygame.display.update()
+    
+    while paused:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+                if event.key == pygame.K_RETURN:
+                    paused = False
+                    pygame.mixer.music.stop()
+                    pygame.mixer.music.load("assets/sounds/gameSong.mp3")
+                    pygame.mixer.music.play(-1)
+        clock.tick(10)
+
+
 def playScreen():
     #TODO: Since this is the meat and bones of the game, try to make it clearer what is an object and what is the object update function
     pygame.display.set_caption("Game")
@@ -62,8 +95,11 @@ def playScreen():
             lastUpdate = currentTime
             if frame >= len(animationList):
                 frame = 0
-
-        screen.blit(animationList[frame], (300,0))
+        screen_width, screen_height = screen.get_size()
+        frame_image = animationList[frame]
+        x = (screen_width - frame_image.get_width()) // 2
+        y = (screen_height - frame_image.get_height()) // 2
+        screen.blit(frame_image, (x, y))
         drawText(f"Score: {score}", 20, textColor, 1025, 450)
 
         for event in pygame.event.get():
@@ -72,6 +108,8 @@ def playScreen():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    pauseScreen()
                 if event.key == pygame.K_a:
                     player.vel_x = -player.speed
                 if event.key == pygame.K_d:
