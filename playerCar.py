@@ -14,6 +14,9 @@ class PlayerCar(pygame.sprite.Sprite):
         self.vel_y = 0
         self.speed = 5 # Speed of movement, will be changed depending on the feel
                        # Depending on the playtests, I'll change it, but at the same time, it feels good, so it won't be changed :D
+        self.powerUpReceived = None
+        self.shieldActive = False
+        self.shieldCoolDownTimer = 0
 
     def update(self):
         #Adding velocity to the coordinates to make movement
@@ -28,5 +31,7 @@ class PlayerCar(pygame.sprite.Sprite):
             self.rect.centery = 675
         if self.rect.centery <=40:
             self.rect.centery = 40
+        if self.shieldCoolDownTimer > 0:
+            self.shieldCoolDownTimer -= 1
 
     

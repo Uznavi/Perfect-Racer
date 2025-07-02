@@ -2,6 +2,7 @@ import pygame, sys
 import spritesheet
 from playerCar import PlayerCar
 from enemySpawner import EnemySpawner
+# from itemBox import ItemBox
 from itemBoxSpawner import ItemBoxSpawner
 #TODO : At the end, clean up the main file and add stuff to other files, like constants and stuff
 pygame.init()
@@ -113,6 +114,7 @@ def playScreen():
     #Game objects
     player = PlayerCar()
     enemy_spawner = EnemySpawner()
+    # item_box = ItemBox()
     itemBox_spawner = ItemBoxSpawner()
     spriteGroup = pygame.sprite.Group()
     spriteGroup.add(player)
@@ -134,9 +136,34 @@ def playScreen():
         y = (screen_height - frame_image.get_height()) // 2
         screen.blit(frame_image, (x, y))
         drawText(f"Score: {score}", 20, textColor, 1025, 450)
+        if player.powerUpReceived != None:
+            drawText(f"Power Up : {player.powerUpReceived}", 15, textColor, 1010, 475)
 
+        #Game over cause
         if pygame.sprite.spritecollideany(player, enemy_spawner.enemy_group):
-            gameOverScreen(score)
+            if player.shieldActive:
+                player.shieldActive = False
+                player.shieldCoolDownTimer = 60
+            elif player.shieldCoolDownTimer == 0:
+                gameOverScreen(score)
+        
+
+        #Item box hitting logic
+        item_box_hit = pygame.sprite.spritecollideany(player, itemBox_spawner.itemBox_group)
+        if item_box_hit:
+            if not player.shieldActive:
+                player.powerUpReceived = item_box_hit.powerUp
+            item_box_hit.kill()
+        
+        if player.shieldActive:
+            shieldSurface = pygame.Surface((player.rect.width*2, player.rect.height*2), pygame.SRCALPHA)
+            pygame.draw.ellipse(
+                shieldSurface,
+                (100, 200, 255, 120),
+                shieldSurface.get_rect()
+            )
+            shield_rect = shieldSurface.get_rect(center = player.rect.center)
+            screen.blit(shieldSurface, shield_rect)
         
         if showHitboxes:        
             for enemy in enemy_spawner.enemy_group:
@@ -160,6 +187,12 @@ def playScreen():
                     player.vel_y = -player.speed
                 if event.key == pygame.K_s:
                     player.vel_y = player.speed
+                if event.key == pygame.K_y and player.powerUpReceived is not None:
+                    if player.powerUpReceived == "shield":
+                        player.shieldActive = True
+                    # elif player.powerUpReceived == "bullets":
+                    #     pass
+                    player.powerUpReceived = None
                 if event.key == pygame.K_h: #SUPER COOL AND EPIC DEBUGGING KEY THAT ALLOWS YOU TO SEE
                     showHitboxes = not showHitboxes #THE FUCKING HITBOXES
                 if event.key == pygame.K_ESCAPE:
@@ -214,10 +247,10 @@ def mainMenu():
     while run:
         clock.tick(fps)
         screen.fill((0,0,255))
-        drawText("PERFECT RACER", 40, textColor, 375, 200)
+        drawText("PERFECT RACER", 40, textColor, 390, 200)
         drawText("Press Start/Enter to begin", 20, textColor, 400, 450)
-        drawText("Or press Select/Space for the controls!", 20, textColor, 295, 495)
-        drawText("To quit, press the Home button or Escape key", 20, textColor, 250, 545)
+        drawText("Or press Select/Space for the controls!", 20, textColor, 250, 495)
+        drawText("To quit, press the Home button or Escape key", 20, textColor, 205, 545)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False

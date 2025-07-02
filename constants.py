@@ -9,3 +9,4 @@ LANE_X_POSITION_BOXES = [530, 608, 678, 755]
 # C.R = Center Rigth
 # F.M.R = Far Middle Right
 # F.R = Far Right
+POWER_UPS = ["shield"]

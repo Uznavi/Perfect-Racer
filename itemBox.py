@@ -1,6 +1,7 @@
 import pygame
 import random
-from constants import LANE_X_POSITION_BOXES
+from constants import LANE_X_POSITION_BOXES, POWER_UPS
+
 
 class ItemBox(pygame.sprite.Sprite):
     def __init__(self, lane_idx):
@@ -12,6 +13,8 @@ class ItemBox(pygame.sprite.Sprite):
         self.rect.y = -self.rect.height
         self.vel_x = 0
         self.vel_y = 5
+        self.hit = False
+        self.powerUp = random.choice(POWER_UPS)
 
     def update(self):
         self.rect.x += self.vel_x

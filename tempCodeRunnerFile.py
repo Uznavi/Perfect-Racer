@@ -1,1 +1,2 @@
-pygame.draw.rect(screen, (0,255,0), player.rect, 2)
+                    # elif player.powerUpReceived == "bullets":
+                    #     pass
