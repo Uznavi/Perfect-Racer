@@ -4,6 +4,7 @@ from playerCar import PlayerCar
 from enemySpawner import EnemySpawner
 # from itemBox import ItemBox
 from itemBoxSpawner import ItemBoxSpawner
+from scaler import GameScaler
 #TODO : At the end, clean up the main file and add stuff to other files, like constants and stuff
 pygame.init()
 pygame.mixer.init()
@@ -17,10 +18,10 @@ clock = pygame.time.Clock()
 #P.S. why are you reading this? you fucking nerd ☝️🤓
 
 #Screen constants
-# screenWidth = 1300
-# screenHeight = 645
 # screen = pygame.display.set_mode((screenWidth, screenHeight), pygame.RESIZABLE)
 screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+screenWidth = 1300
+screenHeight = 645
 #Sprite Sheet Information and Text Color
 imageSpriteSheet = pygame.image.load("assets/images/B i g  r o a d.png").convert_alpha()
 spriteSheet = spritesheet.SpriteSheet(imageSpriteSheet)
@@ -29,16 +30,20 @@ textColor = (255,255,255)
 animationList = []
 animationLoop = 5
 animationCooldown = 10
+scaler = GameScaler(screenWidth, screenHeight, screen)
 
 for x in range(animationLoop):
-    animationList.append(spriteSheet.getImage(x, 100, 100, 7.15))
+    scaled_w, scaled_h = scaler.scale_size(100,100)
+    animationList.append(spriteSheet.getImage(x, scaled_w, scaled_h, 7.15))
 
 #Text function
 #TODO: At some point, make a constant x and y variable to not add a new one every time
 def drawText(text, fontSize, textCol, x, y):
+    scaledFontSize = scaler.scale_font(fontSize)
     font = pygame.font.Font("assets/font/PressStart2P.ttf", fontSize)
     text_surface = font.render(text, True, textCol)
-    screen.blit(text_surface, (x,y))
+    scaledX, scaledY = scaler.scale_pos(x, y)
+    screen.blit(text_surface, scaler.scale_pos(x,y))
 #Screen Event Handlers
 
 def gameOverScreen(score):
