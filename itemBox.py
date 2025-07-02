@@ -12,7 +12,7 @@ class ItemBox(pygame.sprite.Sprite):
         self.rect.centerx = LANE_X_POSITION_BOXES[lane_idx]
         self.rect.y = -self.rect.height
         self.vel_x = 0
-        self.vel_y = 5
+        self.vel_y = 8
         self.hit = False
         self.powerUp = random.choice(POWER_UPS)
 
