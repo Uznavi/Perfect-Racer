@@ -36,13 +36,3 @@ class EnemySpawner:
             lane_idx = random.choice(freeLanes)
             newEnemy = Enemy(lane_idx)
             self.enemy_group.add(newEnemy)
-        # occupiedLanes = []
-        # for enemy in self.enemy_group:
-        #     for idx, lane_x in enumerate(LANE_X_POSITION):
-        #         if abs(enemy.rect.x - lane_x) < 10:
-        #             occupiedLanes.append(idx)
-        # freeLanes = [i for i in range(len(LANE_X_POSITION)) if i not in occupiedLanes] 
-        # if freeLanes:
-        #     lane_idx = random.choice(freeLanes)
-        #     newEnemy = Enemy(lane_idx)
-        #     self.enemy_group.add(newEnemy)

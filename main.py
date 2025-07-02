@@ -2,6 +2,7 @@ import pygame, sys
 import spritesheet
 from playerCar import PlayerCar
 from enemySpawner import EnemySpawner
+from itemBoxSpawner import ItemBoxSpawner
 #TODO : At the end, clean up the main file and add stuff to other files, like constants and stuff
 pygame.init()
 pygame.mixer.init()
@@ -40,11 +41,16 @@ def drawText(text, fontSize, textCol, x, y):
 #Screen Event Handlers
 
 def gameOverScreen(score):
+    pygame.mixer.music.load("assets/sounds/gameOverSong.mp3")
+    pygame.mixer.music.play()
     gameOverState = True
     while gameOverState:
         screen.fill((0,0,0))
         drawText("YOU CRASHED!", 40, (255,0,0), 405, 185)
-        drawText(f"Your score: {score}", 30, textColor, 425, 340)
+        drawText(f"Your score: {score}", 20, textColor, 490, 340)
+        drawText("To try again, press Start/Enter", 15, textColor, 400, 600)
+        drawText("To go to the menu, press Select/Space", 15, textColor, 400, 620)
+        drawText("To quit, press the Home button or Escape key", 15, textColor, 400, 640)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -107,6 +113,7 @@ def playScreen():
     #Game objects
     player = PlayerCar()
     enemy_spawner = EnemySpawner()
+    itemBox_spawner = ItemBoxSpawner()
     spriteGroup = pygame.sprite.Group()
     spriteGroup.add(player)
 
@@ -139,7 +146,7 @@ def playScreen():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run == False
+                run = False
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
@@ -171,6 +178,8 @@ def playScreen():
         spriteGroup.update()
         enemy_spawner.enemy_group.draw(screen)
         enemy_spawner.update()
+        itemBox_spawner.itemBox_group.draw(screen)
+        itemBox_spawner.update()
         pygame.display.update()
 
 def controlsMenu():
@@ -180,7 +189,7 @@ def controlsMenu():
         screen.fill((0,0,0))
         clock.tick(fps)
         drawText("CONTROLS", 40, textColor, 470, 125)
-        drawText("D-Pad: Directional Movement (Up, Down, Left, Right)", 20, textColor, 135, 350)
+        drawText("D-Pad / WASD: Directional Movement (Up, Down, Left, Right)", 20, textColor, 70, 350)
         drawText("Y: Power-Up (Can only be used when in inventory)", 20, textColor, 165, 395)
         drawText("Press Select/Space again to go back to the title screen", 10, textColor, 370, 500)
         for event in pygame.event.get():
@@ -206,8 +215,9 @@ def mainMenu():
         clock.tick(fps)
         screen.fill((0,0,255))
         drawText("PERFECT RACER", 40, textColor, 375, 200)
-        drawText("Press Start to begin", 20, textColor, 415, 450)
-        drawText("Or press Select for the controls!", 20, textColor, 315, 495)
+        drawText("Press Start/Enter to begin", 20, textColor, 400, 450)
+        drawText("Or press Select/Space for the controls!", 20, textColor, 295, 495)
+        drawText("To quit, press the Home button or Escape key", 20, textColor, 250, 545)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False

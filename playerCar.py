@@ -8,7 +8,7 @@ class PlayerCar(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         #645 is the middle of the screen
         #675 is the bottom of the screen
-        self.rect.centerx = 608
+        self.rect.centerx = 645
         self.rect.centery = 675
         self.vel_x = 0 #initial speeds
         self.vel_y = 0
