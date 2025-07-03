@@ -1,10 +1,7 @@
 import pygame, sys
 import spritesheet
-from playerCar import PlayerCar
-from enemySpawner import EnemySpawner
 # from itemBox import ItemBox
-from itemBoxSpawner import ItemBoxSpawner
-from scaler import GameScaler
+from scaler import GameScaler, set_scaler
 #TODO : At the end, clean up the main file and add stuff to other files, like constants and stuff
 pygame.init()
 pygame.mixer.init()
@@ -31,10 +28,27 @@ animationList = []
 animationLoop = 5
 animationCooldown = 10
 scaler = GameScaler(screenWidth, screenHeight, screen)
+set_scaler(scaler)
+
+from playerCar import PlayerCar
+from enemySpawner import EnemySpawner
+from itemBoxSpawner import ItemBoxSpawner
+
+FRAME_WIDTH = 100
+FRAME_HEIGHT = 100
+
+# Try 1.1 or 1.2 for a little extra height, or 1.0 for exact fit
+HEIGHT_MULTIPLIER = 1.1
 
 for x in range(animationLoop):
-    scaled_w, scaled_h = scaler.scale_size(100,100)
-    animationList.append(spriteSheet.getImage(x, scaled_w, scaled_h, 7.15))
+    # 1. Calculate scale factor to match (or exceed) screen height
+    scale_factor = (screenHeight / FRAME_HEIGHT) * HEIGHT_MULTIPLIER
+    scaled_w = int(FRAME_WIDTH * scale_factor)
+    scaled_h = int(FRAME_HEIGHT * scale_factor)
+    # 2. Extract and scale the frame
+    frame_img = spriteSheet.getImage(x, FRAME_WIDTH, FRAME_HEIGHT)
+    frame_img = pygame.transform.scale(frame_img, (scaled_w, scaled_h))
+    animationList.append(frame_img)
 
 #Text function
 #TODO: At some point, make a constant x and y variable to not add a new one every time
@@ -54,9 +68,9 @@ def gameOverScreen(score):
         screen.fill((0,0,0))
         drawText("YOU CRASHED!", 40, (255,0,0), 405, 185)
         drawText(f"Your score: {score}", 20, textColor, 490, 340)
-        drawText("To try again, press Start/Enter", 15, textColor, 400, 600)
-        drawText("To go to the menu, press Select/Space", 15, textColor, 400, 620)
-        drawText("To quit, press the Home button or Escape key", 15, textColor, 400, 640)
+        drawText("To try again, press Start/Enter", 15, textColor, 400, 500)
+        drawText("To go to the menu, press Select/Space", 15, textColor, 400, 520)
+        drawText("To quit, press the Home button or Escape key", 15, textColor, 400, 540)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()

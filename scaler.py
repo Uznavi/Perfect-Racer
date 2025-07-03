@@ -18,3 +18,10 @@ class GameScaler:
 
     def scale_font(self, font_size):
         return int(font_size * (self.scale_x + self.scale_y) / 2)
+
+scaler = None
+
+def set_scaler(s):
+    global scaler
+    scaler = s
+    print("Scaler set:", scaler)

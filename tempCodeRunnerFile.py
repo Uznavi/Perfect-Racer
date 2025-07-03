@@ -1,2 +1,2 @@
-                    # elif player.powerUpReceived == "bullets":
-                    #     pass
+            # if event.type == pygame.QUIT:
+            #     run = False

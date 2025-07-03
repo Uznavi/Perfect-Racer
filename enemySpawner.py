@@ -2,6 +2,7 @@ import pygame
 import random
 from constants import LANE_X_POSITION
 from enemyCar import Enemy
+from scaler import scaler
 
 class EnemySpawner:
     def __init__(self):
@@ -14,18 +15,19 @@ class EnemySpawner:
             self.spawnEnemy()
             self.spawn_timer = random.randrange(30, 60)
         else:
-            self.spawn_timer -=1
+            self.spawn_timer -= 1
+
     def spawnEnemy(self):
-        #You're gonna be able to tell that this part was made by Copilot
-        #This just checks that a car can spawn in a disoccupied lane cuz i don't want them to overlap and shit
-        minDistanceY = 435
-        minDistanceX = 40
+        # Use scaled distances
+        _, minDistanceY = scaler.scale_pos(0, 435)
+        minDistanceX, _ = scaler.scale_pos(40, 0)
         freeLanes = []
         for idx, lane_x in enumerate(LANE_X_POSITION):
+            scaled_lane_x, _ = scaler.scale_pos(lane_x, 0)
             lane_free = True
             for enemy in self.enemy_group:
                 if (
-                    abs(enemy.rect.x - lane_x) < minDistanceX and 
+                    abs(enemy.rect.x - scaled_lane_x) < minDistanceX and 
                     abs(enemy.rect.y + enemy.rect.height) < minDistanceY
                 ):
                     lane_free = False

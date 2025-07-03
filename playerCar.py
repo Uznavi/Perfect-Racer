@@ -1,15 +1,18 @@
 import pygame
+from scaler import scaler
 
 class PlayerCar(pygame.sprite.Sprite):
     def __init__(self):
         super(PlayerCar, self).__init__()
         self.image = pygame.image.load("assets/images/PlayerCar.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (self.image.get_width()*1.5, self.image.get_height()*1.5))
+        DESIGN_CAR_WIDTH = 40   # or whatever looks good for your lanes
+        DESIGN_CAR_HEIGHT = 70  # adjust as needed
+        scaled_w, scaled_h = scaler.scale_size(DESIGN_CAR_WIDTH, DESIGN_CAR_HEIGHT)
+        self.image = pygame.transform.scale(self.image, (scaled_w, scaled_h))
         self.rect = self.image.get_rect()
         #645 is the middle of the screen
-        #675 is the bottom of the screen
-        self.rect.centerx = 645
-        self.rect.centery = 675
+        #615 is the bottom of the screen
+        self.rect.centerx, self.rect.centery = scaler.scale_pos(655, 608)
         self.vel_x = 0 #initial speeds
         self.vel_y = 0
         self.speed = 5 # Speed of movement, will be changed depending on the feel
@@ -19,18 +22,21 @@ class PlayerCar(pygame.sprite.Sprite):
         self.shieldCoolDownTimer = 0
 
     def update(self):
-        #Adding velocity to the coordinates to make movement
         self.rect.centerx += self.vel_x
-        #500 for the left, 715 for the right
-        if self.rect.centerx <= 530:
-            self.rect.centerx = 530
-        if self.rect.centerx >= 755:
-            self.rect.centerx = 755
+        min_x, _ = scaler.scale_pos(545, 0)
+        max_x, _ = scaler.scale_pos(765, 0)
+        _, min_y = scaler.scale_pos(0, 40)
+        _, max_y = scaler.scale_pos(0, 608)
+
+        if self.rect.centerx <= min_x:
+            self.rect.centerx = min_x
+        if self.rect.centerx >= max_x:
+            self.rect.centerx = max_x
         self.rect.centery += self.vel_y
-        if self.rect.centery >= 675:
-            self.rect.centery = 675
-        if self.rect.centery <=40:
-            self.rect.centery = 40
+        if self.rect.centery >= max_y:
+            self.rect.centery = max_y
+        if self.rect.centery <= min_y:
+            self.rect.centery = min_y
         if self.shieldCoolDownTimer > 0:
             self.shieldCoolDownTimer -= 1
 
