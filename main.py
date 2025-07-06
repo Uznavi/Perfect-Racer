@@ -1,5 +1,6 @@
 import pygame, sys
 import spritesheet
+import eventHandler
 # from itemBox import ItemBox
 from scaler import GameScaler, set_scaler
 #TODO : At the end, clean up the main file and add stuff to other files, like constants and stuff
@@ -70,21 +71,19 @@ def gameOverScreen(score):
         drawText(f"Your score: {score}", 20, textColor, 490, 340)
         drawText("To try again, press Start/Enter", 15, textColor, 400, 500)
         drawText("To go to the menu, press Select/Space", 15, textColor, 400, 520)
-        drawText("To quit, press the Home button or Escape key", 15, textColor, 400, 540)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
-                if event.key == pygame.K_RETURN:
-                    gameOverState = False
-                    playScreen()
-                if event.key == pygame.K_SPACE:
-                    mainMenu()
+        drawText("To quit, press the Home button or Escape key", 15, textColor, 400, 540) 
         pygame.display.update()
+        clock.tick(10)
+        action = eventHandler.handle_game_over_events()
+        if action == "quit":
+            pygame.quit()
+            sys.exit()
+        elif action == "play":
+            playScreen()
+            return
+        elif action == "main_menu":
+            mainMenu()
+            return
 
 
 def pauseScreen():
@@ -93,30 +92,26 @@ def pauseScreen():
     pygame.mixer.music.load("assets/sounds/pause.mp3")
     pygame.mixer.music.play(-1)
     paused = True
-
-    overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
-    overlay.fill((0,0,0,128))
-
-    screen.blit(overlay, (0,0))
-    drawText("PAUSED", 40, textColor, 525, 300)
-    drawText("Press Start/Enter to resume", 20, textColor, 380, 400)
-    pygame.display.update()
-    
     while paused:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
-                if event.key == pygame.K_RETURN:
-                    paused = False
-                    pygame.mixer.music.stop()
-                    pygame.mixer.music.load("assets/sounds/gameSong.mp3")
-                    pygame.mixer.music.play(-1)
+
+        overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
+        overlay.fill((0,0,0,128))
+
+        screen.blit(overlay, (0,0))
+        drawText("PAUSED", 40, textColor, 525, 300)
+        drawText("Press Start/Enter to resume", 20, textColor, 380, 400)
+        pygame.display.update()
         clock.tick(10)
+    
+        action = eventHandler.handle_pause_screen_events()
+        if action == "quit":
+            pygame.quit()
+            sys.exit()
+        elif action == "resume":
+            pygame.mixer.music.stop()
+            pygame.mixer.music.load("assets/sounds/gameSong.mp3")
+            pygame.mixer.music.play(-1)
+            paused = False
 
 
 def playScreen():
@@ -189,43 +184,14 @@ def playScreen():
                 pygame.draw.rect(screen, (255,0,0), enemy.rect, 2)
                 pygame.draw.rect(screen, (0,255,0), player.rect, 2)
 
+        action, showHitboxes = eventHandler.handle_gameplay_events(player, showHitboxes)
+        if action == "quit":
+            pygame.quit()
+            sys.exit()
+        elif action == "pause":
+            pauseScreen()
+            return
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    pauseScreen()
-                if event.key == pygame.K_a:
-                    player.vel_x = -player.speed
-                if event.key == pygame.K_d:
-                    player.vel_x = player.speed
-                if event.key == pygame.K_w:
-                    player.vel_y = -player.speed
-                if event.key == pygame.K_s:
-                    player.vel_y = player.speed
-                if event.key == pygame.K_y and player.powerUpReceived is not None:
-                    if player.powerUpReceived == "shield":
-                        player.shieldActive = True
-                    # elif player.powerUpReceived == "bullets":
-                    #     pass
-                    player.powerUpReceived = None
-                if event.key == pygame.K_h: #SUPER COOL AND EPIC DEBUGGING KEY THAT ALLOWS YOU TO SEE
-                    showHitboxes = not showHitboxes #THE FUCKING HITBOXES
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_a:
-                    player.vel_x = 0
-                if event.key == pygame.K_d:
-                    player.vel_x = 0
-                if event.key == pygame.K_w:
-                    player.vel_y = 0
-                if event.key == pygame.K_s:
-                    player.vel_y = 0
         spriteGroup.draw(screen)
         spriteGroup.update()
         enemy_spawner.enemy_group.draw(screen)
@@ -244,17 +210,13 @@ def controlsMenu():
         drawText("D-Pad / WASD: Directional Movement (Up, Down, Left, Right)", 20, textColor, 70, 350)
         drawText("Y: Power-Up (Can only be used when in inventory)", 20, textColor, 165, 395)
         drawText("Press Select/Space again to go back to the title screen", 10, textColor, 370, 500)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    mainMenu()
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
+        action = eventHandler.handle_controls_screen_events()
+        if action == "quit":
+            pygame.quit()
+            sys.exit()
+        elif action == "main_menu":
+            mainMenu()
+            return
         pygame.display.update()
 
 def mainMenu():
@@ -270,17 +232,16 @@ def mainMenu():
         drawText("Press Start/Enter to begin", 20, textColor, 400, 450)
         drawText("Or press Select/Space for the controls!", 20, textColor, 250, 495)
         drawText("To quit, press the Home button or Escape key", 20, textColor, 205, 545)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    playScreen()
-                if event.key == pygame.K_SPACE:
-                    controlsMenu()
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
+        action = eventHandler.handle_main_menu_events()
+        if action == "play":
+            playScreen()
+            return
+        elif action == "controls":
+            controlsMenu()
+            return
+        elif action == "quit":
+            pygame.quit()
+            sys.exit()
         pygame.display.update()
 
 mainMenu()
