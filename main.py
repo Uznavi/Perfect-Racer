@@ -6,9 +6,14 @@ from scaler import GameScaler, set_scaler
 #TODO : At the end, clean up the main file and add stuff to other files, like constants and stuff
 pygame.init()
 pygame.mixer.init()
-
 fps = 60
 clock = pygame.time.Clock()
+pygame.joystick.init()
+if pygame.joystick.get_count():
+    joystick = pygame.joystick.Joystick(0)
+    joystick.init()
+else:
+    joystick = None
 
 #For now I'll keep these guys here, after the initial playtesting I'll decide to bring them back
 #That being said if I need to bring them back, then I'll have to scale it all over again, fml
@@ -87,22 +92,20 @@ def gameOverScreen(score):
 
 
 def pauseScreen():
-    # During the playtest, ask to see if they mind the pause music. It's just that I wanted the game song to resume from where it left 
-    #off when paused but apparently that can't be done so just ask everyone how they feel about it and if the pause song should stay
     pygame.mixer.music.load("assets/sounds/pause.mp3")
     pygame.mixer.music.play(-1)
     paused = True
+
+    # DO NOT fill the screen again inside the loop
+    overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
+    overlay.fill((0, 0, 0, 128))  # 128 = 50% transparent
+    screen.blit(overlay, (0, 0))
+    drawText("PAUSED", 40, textColor, 525, 300)
+    drawText("Press Start/Enter to resume", 20, textColor, 380, 400)
+    pygame.display.update()
+    clock.tick(10)
+
     while paused:
-
-        overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
-        overlay.fill((0,0,0,128))
-
-        screen.blit(overlay, (0,0))
-        drawText("PAUSED", 40, textColor, 525, 300)
-        drawText("Press Start/Enter to resume", 20, textColor, 380, 400)
-        pygame.display.update()
-        clock.tick(10)
-    
         action = eventHandler.handle_pause_screen_events()
         if action == "quit":
             pygame.quit()
@@ -111,7 +114,7 @@ def pauseScreen():
             pygame.mixer.music.stop()
             pygame.mixer.music.load("assets/sounds/gameSong.mp3")
             pygame.mixer.music.play(-1)
-            paused = False
+            return "resume"
 
 
 def playScreen():
@@ -189,8 +192,10 @@ def playScreen():
             pygame.quit()
             sys.exit()
         elif action == "pause":
-            pauseScreen()
-            return
+            result = pauseScreen()
+            if result == "quit":
+                pygame.quit()
+                sys.exit()
 
         spriteGroup.draw(screen)
         spriteGroup.update()
@@ -206,7 +211,7 @@ def controlsMenu():
     while run:
         screen.fill((0,0,0))
         clock.tick(fps)
-        drawText("CONTROLS", 40, textColor, 470, 125)
+        drawText("CONTROLS", 40, textColor, 495, 125)
         drawText("D-Pad / WASD: Directional Movement (Up, Down, Left, Right)", 20, textColor, 70, 350)
         drawText("Y: Power-Up (Can only be used when in inventory)", 20, textColor, 165, 395)
         drawText("Press Select/Space again to go back to the title screen", 10, textColor, 370, 500)
@@ -228,10 +233,10 @@ def mainMenu():
     while run:
         clock.tick(fps)
         screen.fill((0,0,255))
-        drawText("PERFECT RACER", 40, textColor, 390, 200)
-        drawText("Press Start/Enter to begin", 20, textColor, 400, 450)
-        drawText("Or press Select/Space for the controls!", 20, textColor, 250, 495)
-        drawText("To quit, press the Home button or Escape key", 20, textColor, 205, 545)
+        drawText("PERFECT RACER", 40, textColor, 380, 175)
+        drawText("Press Start/Enter to begin", 20, textColor, 400, 395)
+        drawText("Or press Select/Space for the controls!", 20, textColor, 265, 455)
+        drawText("To quit, press the Home button or Escape key", 20, textColor, 215, 515)
         action = eventHandler.handle_main_menu_events()
         if action == "play":
             playScreen()

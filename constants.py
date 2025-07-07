@@ -10,3 +10,29 @@ LANE_X_POSITION_BOXES = [545, 618, 688, 765]
 # F.M.R = Far Middle Right
 # F.R = Far Right
 POWER_UPS = ["shield"]
+
+#CONTROLLER INPUTS
+NS_A = 0
+NS_B = 1
+NS_Y = 3
+NS_START = 6
+NS_SELECT = 4
+NS_HOME = 5
+NS_D_PAD_LEFT = 13
+NS_D_PAD_RIGHT = 14
+NS_D_PAD_UP = 11
+NS_D_PAD_DOWN = 12
+
+LG_1 = 0
+LG_2 = 1
+LG_3 = 2
+LG_10 = 9
+LG_9 = 8
+LG_HAT_UP = (0,1)
+LG_HAT_DOWN = (0,-1)
+LG_HAT_LEFT = (-1,0)
+LG_HAT_RIGHT = (1,0)
+LG_HAT_NW = (-1,1)
+LG_HAT_SW = (-1,-1)
+LG_HAT_SE = (1,-1)
+LG_HAT_NE = (1,1)

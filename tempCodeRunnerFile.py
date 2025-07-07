@@ -1,2 +1,1 @@
-            # if event.type == pygame.QUIT:
-            #     run = False
+clock.tick(10)

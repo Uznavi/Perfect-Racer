@@ -20,6 +20,7 @@ class PlayerCar(pygame.sprite.Sprite):
         self.powerUpReceived = None
         self.shieldActive = False
         self.shieldCoolDownTimer = 0
+        self.last_input = "none"  # or "analog" or "dpad"
 
     def update(self):
         self.rect.centerx += self.vel_x
