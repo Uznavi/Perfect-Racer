@@ -1,6 +1,6 @@
 import pygame
 import random
-from constants import LANE_X_POSITION_BOXES
+import constants as c
 from itemBox import ItemBox
 
 class ItemBoxSpawner():
@@ -17,6 +17,6 @@ class ItemBoxSpawner():
             self.itemBox_spawn_timer -=1
     
     def spawnItemBox(self):
-        for laneX in range(len(LANE_X_POSITION_BOXES)):
+        for laneX in range(len(c.LANE_X_POSITION_BOXES)):
             item_box = ItemBox(laneX)
             self.itemBox_group.add(item_box)

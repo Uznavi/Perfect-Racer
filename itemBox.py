@@ -1,6 +1,6 @@
 import pygame
 import random
-from constants import LANE_X_POSITION_BOXES, POWER_UPS
+import constants as c
 from scaler import scaler
 
 class ItemBox(pygame.sprite.Sprite):
@@ -11,12 +11,12 @@ class ItemBox(pygame.sprite.Sprite):
         scaled_w, scaled_h = scaler.scale_size(DESIGN_BOX_SIZE, DESIGN_BOX_SIZE)
         self.image = pygame.transform.scale(self.image, (scaled_w, scaled_h))
         self.rect = self.image.get_rect()
-        self.rect.centerx, _ = scaler.scale_pos(LANE_X_POSITION_BOXES[lane_idx], 0)
+        self.rect.centerx, _ = scaler.scale_pos(c.LANE_X_POSITION_BOXES[lane_idx], 0)
         self.rect.y = -self.rect.height
         self.vel_x = 0
         self.vel_y = 8  # Or: _, self.vel_y = scaler.scale_pos(0, 8)
         self.hit = False
-        self.powerUp = random.choice(POWER_UPS)
+        self.powerUp = random.choice(c.POWER_UPS)
 
     def update(self):
         self.rect.x += self.vel_x

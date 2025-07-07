@@ -1,6 +1,6 @@
 import pygame
 import random
-from constants import LANE_X_POSITION
+import constants as c
 from scaler import scaler
 
 enemyImages = [
@@ -21,7 +21,7 @@ class Enemy(pygame.sprite.Sprite):
         scaled_w, scaled_h = scaler.scale_size(DESIGN_CAR_WIDTH, DESIGN_CAR_HEIGHT)
         self.image = pygame.transform.scale(self.image, (scaled_w, scaled_h))
         self.rect = self.image.get_rect()
-        self.rect.centerx, _ = scaler.scale_pos(LANE_X_POSITION[lane_idx], 0)
+        self.rect.centerx, _ = scaler.scale_pos(c.LANE_X_POSITION[lane_idx], 0)
         self.rect.y = -self.rect.height
         self.vel_x = 0
         self.vel_y = random.randrange(3, 8)
