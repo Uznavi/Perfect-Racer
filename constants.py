@@ -9,7 +9,7 @@ LANE_X_POSITION_BOXES = [545, 618, 688, 765]
 # C.R = Center Rigth
 # F.M.R = Far Middle Right
 # F.R = Far Right
-POWER_UPS = ["shield"]
+POWER_UPS = ["shield", "bullets"]
 
 #CONTROLLER INPUTS
 NS_A = 0

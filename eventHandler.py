@@ -89,9 +89,15 @@ def handle_gameplay_events(player, showHitboxes):
                 player.vel_y = -player.speed
             if event.key == pygame.K_s:
                 player.vel_y = player.speed
-            if event.key == pygame.K_y and player.powerUpReceived is not None:
+            if event.key == pygame.K_y:
                 if player.powerUpReceived == "shield":
                     player.shieldActive = True
+                    player.powerUpReceived = None
+                elif player.powerUpReceived == "bullets":
+                    player.bulletsActive = True
+                    player.powerUpReceived = None
+                elif player.bulletsActive:
+                    player.shoot()
                 player.powerUpReceived = None
             if event.key == pygame.K_h:
                 showHitboxes = not showHitboxes
@@ -165,9 +171,15 @@ def handle_gameplay_events(player, showHitboxes):
 
         # D-Pad movement (button down)
         if event.type == pygame.JOYBUTTONDOWN:
-            if (event.button == c.LG_1 and player.powerUpReceived is not None) or (event.button == c.NS_Y and player.powerUpReceived is not None):
+            if event.button == c.LG_1 or event.button == c.NS_Y:
                 if player.powerUpReceived == "shield":
                     player.shieldActive = True
+                    player.powerUpReceived = None
+                elif player.powerUpReceived == "bullets":
+                    player.bulletsActive = True
+                    player.powerUpReceived = None
+                elif player.bulletsActive:
+                    player.shoot()
                 player.powerUpReceived = None
             if event.button == c.NS_START or event.button == c.LG_10:
                 return "pause", showHitboxes

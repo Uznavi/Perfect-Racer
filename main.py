@@ -4,6 +4,7 @@ import eventHandler
 # from itemBox import ItemBox
 from scaler import GameScaler, set_scaler
 #TODO : At the end, clean up the main file and add stuff to other files, like constants and stuff
+#TODO: DELETE ALL CHATGPT OR COPILOT COMMENTS
 pygame.init()
 pygame.mixer.init()
 fps = 60
@@ -39,6 +40,7 @@ set_scaler(scaler)
 from playerCar import PlayerCar
 from enemySpawner import EnemySpawner
 from itemBoxSpawner import ItemBoxSpawner
+from particles import Particle
 
 FRAME_WIDTH = 100
 FRAME_HEIGHT = 100
@@ -122,6 +124,8 @@ def playScreen():
     pygame.display.set_caption("Game")
     pygame.mixer.music.load("assets/sounds/gameSong.mp3")
     pygame.mixer.music.play(-1)
+    shieldSound = pygame.mixer.Sound("assets/sounds/shield.mp3")
+    hitSound = pygame.mixer.Sound("assets/sounds/explosion.mp3")
     run = True
     lastUpdate = pygame.time.get_ticks()
     frame = 0
@@ -133,6 +137,7 @@ def playScreen():
     enemy_spawner = EnemySpawner()
     # item_box = ItemBox()
     itemBox_spawner = ItemBoxSpawner()
+    particles = pygame.sprite.Group()
     spriteGroup = pygame.sprite.Group()
     spriteGroup.add(player)
 
@@ -153,13 +158,18 @@ def playScreen():
         y = (screen_height - frame_image.get_height()) // 2
         screen.blit(frame_image, (x, y))
         drawText(f"Score: {score}", 20, textColor, 1025, 450)
-        if player.powerUpReceived != None:
-            drawText(f"Power Up : {player.powerUpReceived}", 15, textColor, 1010, 475)
+        if player.powerUpReceived is not None or player.bulletsActive:
+            activePowerUp = player.powerUpReceived if player.powerUpReceived is not None else "bullets"
+            drawText(f"Power Up : {activePowerUp}", 15, textColor, 1010, 475)
 
         #Game over cause
         if pygame.sprite.spritecollideany(player, enemy_spawner.enemy_group):
             if player.shieldActive:
                 player.shieldActive = False
+                player.shieldSoundPlayed = False
+                player.shieldCoolDownTimer = 60
+            elif player.bulletsActive:
+                player.bulletsActive = False
                 player.shieldCoolDownTimer = 60
             elif player.shieldCoolDownTimer == 0:
                 gameOverScreen(score)
@@ -168,9 +178,13 @@ def playScreen():
         #Item box hitting logic
         item_box_hit = pygame.sprite.spritecollideany(player, itemBox_spawner.itemBox_group)
         if item_box_hit:
-            if not player.shieldActive:
+            if not player.shieldActive and not player.bulletsActive and player.powerUpReceived is None:
                 player.powerUpReceived = item_box_hit.powerUp
             item_box_hit.kill()
+        
+        if player.shieldActive and not player.shieldSoundPlayed:
+            shieldSound.play()
+            player.shieldSoundPlayed = True
         
         if player.shieldActive:
             shieldSurface = pygame.Surface((player.rect.width*2, player.rect.height*2), pygame.SRCALPHA)
@@ -197,12 +211,25 @@ def playScreen():
                 pygame.quit()
                 sys.exit()
 
+
         spriteGroup.draw(screen)
         spriteGroup.update()
+        player.bullets.update()
+        player.bullets.draw(screen)
         enemy_spawner.enemy_group.draw(screen)
         enemy_spawner.update()
+        hits = pygame.sprite.groupcollide(player.bullets, enemy_spawner.enemy_group, True, True)
+        if hits:
+            score +=100
+            hitSound.play()
+            for enemy_list in hits.values():
+                for enemy in enemy_list:
+                    for _ in range(15):
+                        particles.add(Particle(enemy.rect.center))
         itemBox_spawner.itemBox_group.draw(screen)
         itemBox_spawner.update()
+        particles.update()
+        particles.draw(screen)
         pygame.display.update()
 
 def controlsMenu():
@@ -213,7 +240,8 @@ def controlsMenu():
         clock.tick(fps)
         drawText("CONTROLS", 40, textColor, 495, 125)
         drawText("D-Pad / WASD: Directional Movement (Up, Down, Left, Right)", 20, textColor, 70, 350)
-        drawText("Y: Power-Up (Can only be used when in inventory)", 20, textColor, 165, 395)
+        drawText("Y/Triangle: Power-Up (Can only be used when in inventory)", 20, textColor, 80, 395)
+        drawText("This game supports DualSense, Switch Pro Controller, and LG Dual Action", 15, textColor, 125, 450)
         drawText("Press Select/Space again to go back to the title screen", 10, textColor, 370, 500)
         action = eventHandler.handle_controls_screen_events()
         if action == "quit":

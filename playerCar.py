@@ -1,5 +1,6 @@
 import pygame
 from scaler import scaler
+from bullet import Bullet
 
 class PlayerCar(pygame.sprite.Sprite):
     def __init__(self):
@@ -13,16 +14,23 @@ class PlayerCar(pygame.sprite.Sprite):
         #645 is the middle of the screen
         #615 is the bottom of the screen
         self.rect.centerx, self.rect.centery = scaler.scale_pos(655, 608)
+        self.bullets = pygame.sprite.Group()
         self.vel_x = 0 #initial speeds
         self.vel_y = 0
         self.speed = 5 # Speed of movement, will be changed depending on the feel
                        # Depending on the playtests, I'll change it, but at the same time, it feels good, so it won't be changed :D
         self.powerUpReceived = None
         self.shieldActive = False
+        self.shieldSoundPlayed = False
+        self.bulletsActive = False
+        self.bulletSound = pygame.mixer.Sound("assets/sounds/shootingSound.mp3")
         self.shieldCoolDownTimer = 0
-        self.last_input = "none"  # or "analog" or "dpad"
+        self.lastBulletTime = 0
+        self.bulletCooldown = 200
+        self.last_input = "none"  # or "analog" or "dpad"gdfgg
 
     def update(self):
+        self.bullets.update()
         self.rect.centerx += self.vel_x
         min_x, _ = scaler.scale_pos(545, 0)
         max_x, _ = scaler.scale_pos(765, 0)
@@ -41,4 +49,12 @@ class PlayerCar(pygame.sprite.Sprite):
         if self.shieldCoolDownTimer > 0:
             self.shieldCoolDownTimer -= 1
 
-    
+    def shoot(self):
+        self.bulletSound.play()
+        current_time = pygame.time.get_ticks()
+        if current_time - self.lastBulletTime >= self.bulletCooldown:
+            newBullet = Bullet()
+            newBullet.rect.centerx = self.rect.centerx
+            newBullet.rect.bottom = self.rect.top  # top-center of car
+            self.bullets.add(newBullet)
+            self.lastBulletTime = current_time
