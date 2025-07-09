@@ -15,7 +15,7 @@ if pygame.joystick.get_count():
     joystick.init()
 else:
     joystick = None
-
+# highScore = 0
 #For now I'll keep these guys here, after the initial playtesting I'll decide to bring them back
 #That being said if I need to bring them back, then I'll have to scale it all over again, fml
 #HEY YOU! PLAYTESTER! JUST LIKE IT THIS WAY, PLEASE
@@ -41,6 +41,7 @@ from playerCar import PlayerCar
 from enemySpawner import EnemySpawner
 from itemBoxSpawner import ItemBoxSpawner
 from particles import Particle
+from scoreSystem import loadHighScore, saveHighScore
 
 FRAME_WIDTH = 100
 FRAME_HEIGHT = 100
@@ -69,18 +70,27 @@ def drawText(text, fontSize, textCol, x, y):
 #Screen Event Handlers
 
 def gameOverScreen(score):
-    pygame.mixer.music.load("assets/sounds/gameOverSong.mp3")
-    pygame.mixer.music.play()
+    previousHighScore = loadHighScore()
+    if score > previousHighScore:
+        pygame.mixer.music.load("assets/sounds/newHighScoreSong.mp3")
+        pygame.mixer.music.play()
+        resultMessage = "You are the perfect racer! Congratulations!"
+        saveHighScore(score)
+    else:
+        resultMessage = "You are not the perfect racer! Try again!"
+        pygame.mixer.music.load("assets/sounds/gameOverSong.mp3")
+        pygame.mixer.music.play()
+    screen.fill((0,0,0))
+    drawText("YOU CRASHED!", 40, (255,0,0), 405, 185)
+    drawText(f"Your score: {score}", 20, textColor, 490, 340)
+    drawText(f"High Score: {previousHighScore}", 20, textColor, 490, 360)
+    drawText(resultMessage, 15, textColor, 350, 400)
+    drawText("To try again, press Start/Enter", 15, textColor, 400, 500)
+    drawText("To go to the menu, press Select/Space", 15, textColor, 400, 520)
+    drawText("To quit, press the Home button or Escape key", 15, textColor, 400, 540) 
+    pygame.display.update()
     gameOverState = True
     while gameOverState:
-        screen.fill((0,0,0))
-        drawText("YOU CRASHED!", 40, (255,0,0), 405, 185)
-        drawText(f"Your score: {score}", 20, textColor, 490, 340)
-        drawText("To try again, press Start/Enter", 15, textColor, 400, 500)
-        drawText("To go to the menu, press Select/Space", 15, textColor, 400, 520)
-        drawText("To quit, press the Home button or Escape key", 15, textColor, 400, 540) 
-        pygame.display.update()
-        clock.tick(10)
         action = eventHandler.handle_game_over_events()
         if action == "quit":
             pygame.quit()
@@ -131,6 +141,7 @@ def playScreen():
     frame = 0
     score = 0
     showHitboxes = False
+    high_score = loadHighScore()
 
     #Game objects
     player = PlayerCar()
@@ -157,6 +168,7 @@ def playScreen():
         x = (screen_width - frame_image.get_width()) // 2
         y = (screen_height - frame_image.get_height()) // 2
         screen.blit(frame_image, (x, y))
+        drawText(f"High Score: {high_score}", 15, textColor, 1015, 430)
         drawText(f"Score: {score}", 20, textColor, 1025, 450)
         if player.powerUpReceived is not None or player.bulletsActive:
             activePowerUp = player.powerUpReceived if player.powerUpReceived is not None else "bullets"
