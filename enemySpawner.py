@@ -18,7 +18,6 @@ class EnemySpawner:
             self.spawn_timer -= 1
 
     def spawnEnemy(self):
-        # Use scaled distances
         _, minDistanceY = scaler.scale_pos(0, 435)
         minDistanceX, _ = scaler.scale_pos(40, 0)
         freeLanes = []

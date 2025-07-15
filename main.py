@@ -4,7 +4,6 @@ import eventHandler
 # from itemBox import ItemBox
 from scaler import GameScaler, set_scaler
 #TODO : At the end, clean up the main file and add stuff to other files, like constants and stuff
-#TODO: DELETE ALL CHATGPT OR COPILOT COMMENTS
 pygame.init()
 pygame.mixer.init()
 fps = 60
@@ -45,16 +44,12 @@ from scoreSystem import loadHighScore, saveHighScore
 
 FRAME_WIDTH = 100
 FRAME_HEIGHT = 100
-
-# Try 1.1 or 1.2 for a little extra height, or 1.0 for exact fit
 HEIGHT_MULTIPLIER = 1.1
 
 for x in range(animationLoop):
-    # 1. Calculate scale factor to match (or exceed) screen height
     scale_factor = (screenHeight / FRAME_HEIGHT) * HEIGHT_MULTIPLIER
     scaled_w = int(FRAME_WIDTH * scale_factor)
     scaled_h = int(FRAME_HEIGHT * scale_factor)
-    # 2. Extract and scale the frame
     frame_img = spriteSheet.getImage(x, FRAME_WIDTH, FRAME_HEIGHT)
     frame_img = pygame.transform.scale(frame_img, (scaled_w, scaled_h))
     animationList.append(frame_img)
@@ -107,8 +102,6 @@ def pauseScreen():
     pygame.mixer.music.load("assets/sounds/pause.ogg")
     pygame.mixer.music.play()
     paused = True
-
-    # DO NOT fill the screen again inside the loop
     overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
     overlay.fill((0, 0, 0, 128))  # 128 = 50% transparent
     screen.blit(overlay, (0, 0))
@@ -266,7 +259,6 @@ def controlsMenu():
 
 def mainMenu():
     pygame.display.set_caption("Main Menu")
-    # Load and play music once at the start
     pygame.mixer.music.load("assets/sounds/introSong.mp3")
     pygame.mixer.music.play()
     run = True

@@ -16,8 +16,8 @@ class Enemy(pygame.sprite.Sprite):
         super(Enemy, self).__init__()
         imagePath = random.choice(enemyImages)
         self.image = pygame.image.load(imagePath).convert_alpha()
-        DESIGN_CAR_WIDTH = 40   # or whatever looks good for your lanes
-        DESIGN_CAR_HEIGHT = 70  # adjust as needed
+        DESIGN_CAR_WIDTH = 40 
+        DESIGN_CAR_HEIGHT = 70
         scaled_w, scaled_h = scaler.scale_size(DESIGN_CAR_WIDTH, DESIGN_CAR_HEIGHT)
         self.image = pygame.transform.scale(self.image, (scaled_w, scaled_h))
         self.rect = self.image.get_rect()

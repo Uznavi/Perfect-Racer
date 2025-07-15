@@ -11,8 +11,6 @@ class PlayerCar(pygame.sprite.Sprite):
         scaled_w, scaled_h = scaler.scale_size(DESIGN_CAR_WIDTH, DESIGN_CAR_HEIGHT)
         self.image = pygame.transform.scale(self.image, (scaled_w, scaled_h))
         self.rect = self.image.get_rect()
-        #645 is the middle of the screen
-        #615 is the bottom of the screen
         self.rect.centerx, self.rect.centery = scaler.scale_pos(655, 608)
         self.bullets = pygame.sprite.Group()
         self.vel_x = 0 #initial speeds
@@ -55,6 +53,6 @@ class PlayerCar(pygame.sprite.Sprite):
         if current_time - self.lastBulletTime >= self.bulletCooldown:
             newBullet = Bullet()
             newBullet.rect.centerx = self.rect.centerx
-            newBullet.rect.bottom = self.rect.top  # top-center of car
+            newBullet.rect.bottom = self.rect.top 
             self.bullets.add(newBullet)
             self.lastBulletTime = current_time
