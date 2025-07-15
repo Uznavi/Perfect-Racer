@@ -78,7 +78,7 @@ def gameOverScreen(score):
         saveHighScore(score)
     else:
         resultMessage = "You are not the perfect racer! Try again!"
-        pygame.mixer.music.load("assets/sounds/gameOverSong.mp3")
+        pygame.mixer.music.load("assets/sounds/gameOverSong.ogg")
         pygame.mixer.music.play()
     screen.fill((0,0,0))
     drawText("YOU CRASHED!", 40, (255,0,0), 405, 185)
@@ -104,8 +104,8 @@ def gameOverScreen(score):
 
 
 def pauseScreen():
-    pygame.mixer.music.load("assets/sounds/pause.mp3")
-    pygame.mixer.music.play(-1)
+    pygame.mixer.music.load("assets/sounds/pause.ogg")
+    pygame.mixer.music.play()
     paused = True
 
     # DO NOT fill the screen again inside the loop
@@ -134,8 +134,8 @@ def playScreen():
     pygame.display.set_caption("Game")
     pygame.mixer.music.load("assets/sounds/gameSong.mp3")
     pygame.mixer.music.play(-1)
-    shieldSound = pygame.mixer.Sound("assets/sounds/shield.mp3")
-    hitSound = pygame.mixer.Sound("assets/sounds/explosion.mp3")
+    shieldSound = pygame.mixer.Sound("assets/sounds/shield.ogg")
+    hitSound = pygame.mixer.Sound("assets/sounds/explosion.wav")
     run = True
     lastUpdate = pygame.time.get_ticks()
     frame = 0
@@ -267,7 +267,7 @@ def controlsMenu():
 def mainMenu():
     pygame.display.set_caption("Main Menu")
     # Load and play music once at the start
-    pygame.mixer.music.load("assets/sounds/intro.mp3")
+    pygame.mixer.music.load("assets/sounds/introSong.mp3")
     pygame.mixer.music.play()
     run = True
     while run:

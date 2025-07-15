@@ -23,7 +23,7 @@ class PlayerCar(pygame.sprite.Sprite):
         self.shieldActive = False
         self.shieldSoundPlayed = False
         self.bulletsActive = False
-        self.bulletSound = pygame.mixer.Sound("assets/sounds/shootingSound.mp3")
+        self.bulletSound = pygame.mixer.Sound("assets/sounds/shootingSound.ogg")
         self.shieldCoolDownTimer = 0
         self.lastBulletTime = 0
         self.bulletCooldown = 200
