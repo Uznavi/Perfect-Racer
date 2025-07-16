@@ -198,7 +198,8 @@ def playScreen(cheatEnabled = False):
                 player.bulletsActive = False
                 player.shieldCoolDownTimer = 60
             elif player.shieldCoolDownTimer == 0:
-                joystick.rumble(0,1,2000)
+                if joystick: 
+                    joystick.rumble(0,1,2000)
                 gameOverScreen(score)
         
 
