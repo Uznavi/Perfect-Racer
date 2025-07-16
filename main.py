@@ -1,3 +1,4 @@
+#TODO : If the game looks better on the screens, fix all the squishiness and boundaries
 import io
 import pstats
 import pygame
@@ -5,6 +6,7 @@ import cProfile
 import spritesheet
 import eventHandler
 import constants as c
+import sys
 # from itemBox import ItemBox
 from scaler import GameScaler, set_scaler
 #TODO : At the end, clean up the main file and add stuff to other files, like constants and stuff
@@ -26,9 +28,10 @@ else:
 
 #Screen constants
 # screen = pygame.display.set_mode((screenWidth, screenHeight), pygame.RESIZABLE)
-screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
-screenWidth = 1300
-screenHeight = 645
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+display_width, display_height = screen.get_size()
+game_width, game_height = 1300, 720
+game_surface = pygame.Surface((game_width, game_height))
 #Sprite Sheet Information and Text Color
 imageSpriteSheet = pygame.image.load("assets/images/B i g  r o a d.png").convert_alpha()
 spriteSheet = spritesheet.SpriteSheet(imageSpriteSheet)
@@ -37,7 +40,7 @@ textColor = (255,255,255)
 animationList = []
 animationLoop = 5
 animationCooldown = 10
-scaler = GameScaler(screenWidth, screenHeight, screen)
+scaler = GameScaler(game_width, game_height, game_surface)
 set_scaler(scaler)
 
 from playerCar import PlayerCar
@@ -51,7 +54,7 @@ FRAME_HEIGHT = 100
 HEIGHT_MULTIPLIER = 1.1
 
 for x in range(animationLoop):
-    scale_factor = (screenHeight / FRAME_HEIGHT) * HEIGHT_MULTIPLIER
+    scale_factor = (game_height / FRAME_HEIGHT) * HEIGHT_MULTIPLIER
     scaled_w = int(FRAME_WIDTH * scale_factor)
     scaled_h = int(FRAME_HEIGHT * scale_factor)
     frame_img = spriteSheet.getImage(x, FRAME_WIDTH, FRAME_HEIGHT)
@@ -76,8 +79,23 @@ def get_cached_text(text, fontSize, textCol):
 
 def drawText(text, fontSize, textCol, x, y):
     text_surface = get_cached_text(text, fontSize, textCol)
-    screen.blit(text_surface, scaler.scale_pos(x,y))
+    game_surface.blit(text_surface, scaler.scale_pos(x,y))
 
+def blitScaled():
+    scale_x = display_width / game_width
+    scale_y = display_height / game_height
+    scale = min(scale_x, scale_y)
+
+    scaled_width = int(game_width * scale)
+    scaled_height = int(game_height * scale)
+
+    x_offset = (display_width - scaled_width) // 2
+    y_offset = (display_height - scaled_height) // 2
+
+    scaled_surface = pygame.transform.smoothscale(game_surface, (scaled_width , scaled_height))
+    screen.fill((0,0,0))
+    screen.blit(scaled_surface, (x_offset, y_offset))
+    pygame.display.flip()
 
 def profile_game():
     pr = cProfile.Profile()
@@ -114,7 +132,7 @@ def gameOverScreen(score):
     isNewHighScore = score > previousHighScore
     gameOverState = True
     while gameOverState:
-        screen.fill((0,0,0))
+        game_surface.fill((0,0,0))
         drawText("YOU CRASHED!", 40, (255,0,0), 405, 185)
         drawText(f"Your score: {score}", 20, textColor, 490, 340)
         drawText(f"High Score: {previousHighScore}", 20, textColor, 490, 360)
@@ -130,12 +148,12 @@ def gameOverScreen(score):
         drawText("To try again, press Start/Enter", 15, textColor, 400, 500)
         drawText("To go to the menu, press Select/Space", 15, textColor, 400, 520)
         drawText("To quit, press the Home button or Escape key", 15, textColor, 400, 540) 
-        pygame.display.flip()
+        blitScaled()
 
         action = eventHandler.handle_game_over_events()
         if action == "quit":
             pygame.quit()
-            return 
+            sys.exit()
         elif action == "play":
             playScreen()
             return
@@ -148,19 +166,19 @@ def pauseScreen():
     pygame.mixer.music.load("assets/sounds/pause.ogg")
     pygame.mixer.music.play()
     paused = True
-    overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
+    overlay = pygame.Surface((game_width, game_height),pygame.SRCALPHA)
     overlay.fill((0, 0, 0, 128))  # 128 = 50% transparent
-    screen.blit(overlay, (0, 0))
+    game_surface.blit(overlay, (0, 0))
     drawText("PAUSED", 40, textColor, 525, 300)
     drawText("Press Start/Enter to resume", 20, textColor, 380, 400)
-    pygame.display.flip()
+    blitScaled()
     clock.tick(10)
 
     while paused:
         action = eventHandler.handle_pause_screen_events()
         if action == "quit":
             pygame.quit()
-            return
+            sys.exit()
         elif action == "resume":
             pygame.mixer.music.stop()
             pygame.mixer.music.load("assets/sounds/gameSong.mp3")
@@ -192,7 +210,7 @@ def playScreen(cheatEnabled = False):
     spriteGroup.add(player)
 
     while run:
-        screen.fill((50,50,50))
+        game_surface.fill((50,50,50))
         clock.tick(fps)
         score +=1
 
@@ -202,11 +220,10 @@ def playScreen(cheatEnabled = False):
             lastUpdate = currentTime
             if frame >= len(animationList):
                 frame = 0
-        screen_width, screen_height = screen.get_size()
         frame_image = animationList[frame]
-        x = (screen_width - frame_image.get_width()) // 2
-        y = (screen_height - frame_image.get_height()) // 2
-        screen.blit(frame_image, (x, y))
+        x = (game_width - frame_image.get_width()) // 2
+        y = (game_height - frame_image.get_height()) // 2
+        game_surface.blit(frame_image, (x, y))
         drawText(f"High Score: {high_score}", 15, textColor, 1015, 430)
         drawText(f"Score: {score}", 20, textColor, 1025, 450)
         if player.isCheating:
@@ -255,29 +272,29 @@ def playScreen(cheatEnabled = False):
                 shieldSurface.get_rect()
             )
             shield_rect = shieldSurface.get_rect(center = player.rect.center)
-            screen.blit(shieldSurface, shield_rect)
+            game_surface.blit(shieldSurface, shield_rect)
         
         if showHitboxes:        
             for enemy in enemy_spawner.enemy_group:
-                pygame.draw.rect(screen, (255,0,0), enemy.rect, 2)
-                pygame.draw.rect(screen, (0,255,0), player.rect, 2)
+                pygame.draw.rect(game_surface, (255,0,0), enemy.rect, 2)
+                pygame.draw.rect(game_surface, (0,255,0), player.rect, 2)
 
         action, showHitboxes = eventHandler.handle_gameplay_events(player, showHitboxes)
         if action == "quit":
             pygame.quit()
-            return 
+            sys.exit()
         elif action == "pause":
             result = pauseScreen()
             if result == "quit":
                 pygame.quit()
-                return 
+                sys.exit()
 
 
-        spriteGroup.draw(screen)
+        spriteGroup.draw(game_surface)
         spriteGroup.update()
         player.bullets.update()
-        player.bullets.draw(screen)
-        enemy_spawner.enemy_group.draw(screen)
+        player.bullets.draw(game_surface)
+        enemy_spawner.enemy_group.draw(game_surface)
         enemy_spawner.update()
         hits = pygame.sprite.groupcollide(player.bullets, enemy_spawner.enemy_group, True, True)
         if hits:
@@ -287,17 +304,17 @@ def playScreen(cheatEnabled = False):
                 for enemy in enemy_list:
                     for _ in range(15):
                         particles.add(Particle(enemy.rect.center))
-        itemBox_spawner.itemBox_group.draw(screen)
+        itemBox_spawner.itemBox_group.draw(game_surface)
         itemBox_spawner.update()
         particles.update()
-        particles.draw(screen)
-        pygame.display.flip()
+        particles.draw(game_surface)
+        blitScaled()
 
 def controlsMenu():
     pygame.display.set_caption("Controls")
     run = True
     while run:
-        screen.fill((0,0,0))
+        game_surface.fill((0,0,0))
         clock.tick(fps)
         drawText("CONTROLS", 40, textColor, 495, 125)
         drawText("D-Pad / WASD: Directional Movement (Up, Down, Left, Right)", 20, textColor, 70, 350)
@@ -307,11 +324,11 @@ def controlsMenu():
         action = eventHandler.handle_controls_screen_events()
         if action == "quit":
             pygame.quit()
-            return 
+            sys.exit()
         elif action == "main_menu":
             mainMenu()
             return
-        pygame.display.flip()
+        blitScaled()
 
 def mainMenu():
     pygame.display.set_caption("Main Menu")
@@ -322,10 +339,10 @@ def mainMenu():
     run = True
     cheatEnabled = False
     while run:
-        screen.fill((0,0,255))
+        game_surface.fill((0,0,255))
         clock.tick(fps)
         if cheatEnabled:
-            screen.fill(c.FLASHING_COLORS[colorIndex])
+            game_surface.fill(c.FLASHING_COLORS[colorIndex])
             frameCounter +=1
             if frameCounter % 10 == 0:
                 colorIndex = (colorIndex + 1) % len(c.FLASHING_COLORS)
@@ -342,7 +359,7 @@ def mainMenu():
             return
         elif action == "quit":
             pygame.quit()
-            return 
-        pygame.display.flip()
+            sys.exit()
+        blitScaled()
 
 profile_game()
