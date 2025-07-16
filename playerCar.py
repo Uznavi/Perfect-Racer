@@ -25,7 +25,8 @@ class PlayerCar(pygame.sprite.Sprite):
         self.shieldCoolDownTimer = 0
         self.lastBulletTime = 0
         self.bulletCooldown = 200
-        self.last_input = "none"  # or "analog" or "dpad"gdfgg
+        self.last_input = "none"
+        self.isCheating = False
 
     def update(self):
         self.bullets.update()

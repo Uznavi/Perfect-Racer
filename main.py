@@ -1,6 +1,7 @@
 import pygame, sys
 import spritesheet
 import eventHandler
+import constants as c
 # from itemBox import ItemBox
 from scaler import GameScaler, set_scaler
 #TODO : At the end, clean up the main file and add stuff to other files, like constants and stuff
@@ -75,17 +76,29 @@ def gameOverScreen(score):
         resultMessage = "You are not the perfect racer! Try again!"
         pygame.mixer.music.load("assets/sounds/gameOverSong.ogg")
         pygame.mixer.music.play()
-    screen.fill((0,0,0))
-    drawText("YOU CRASHED!", 40, (255,0,0), 405, 185)
-    drawText(f"Your score: {score}", 20, textColor, 490, 340)
-    drawText(f"High Score: {previousHighScore}", 20, textColor, 490, 360)
-    drawText(resultMessage, 15, textColor, 350, 400)
-    drawText("To try again, press Start/Enter", 15, textColor, 400, 500)
-    drawText("To go to the menu, press Select/Space", 15, textColor, 400, 520)
-    drawText("To quit, press the Home button or Escape key", 15, textColor, 400, 540) 
-    pygame.display.update()
+    flashIndex = 0
+    flashTimer = 0
+    isNewHighScore = score > previousHighScore
     gameOverState = True
     while gameOverState:
+        screen.fill((0,0,0))
+        drawText("YOU CRASHED!", 40, (255,0,0), 405, 185)
+        drawText(f"Your score: {score}", 20, textColor, 490, 340)
+        drawText(f"High Score: {previousHighScore}", 20, textColor, 490, 360)
+
+        if isNewHighScore:
+            flashTimer +=1
+            if flashTimer % 10 == 0:
+                flashIndex = (flashIndex + 1) % len(c.FLASHING_COLORS)
+            drawText(resultMessage, 15, c.FLASHING_COLORS[flashIndex], 350, 400)
+        else:
+            drawText(resultMessage, 15, textColor, 350, 400)
+        
+        drawText("To try again, press Start/Enter", 15, textColor, 400, 500)
+        drawText("To go to the menu, press Select/Space", 15, textColor, 400, 520)
+        drawText("To quit, press the Home button or Escape key", 15, textColor, 400, 540) 
+        pygame.display.update()
+
         action = eventHandler.handle_game_over_events()
         if action == "quit":
             pygame.quit()
@@ -122,7 +135,7 @@ def pauseScreen():
             return "resume"
 
 
-def playScreen():
+def playScreen(cheatEnabled = False):
     #TODO: Since this is the meat and bones of the game, try to make it clearer what is an object and what is the object update function
     pygame.display.set_caption("Game")
     pygame.mixer.music.load("assets/sounds/gameSong.mp3")
@@ -163,13 +176,21 @@ def playScreen():
         screen.blit(frame_image, (x, y))
         drawText(f"High Score: {high_score}", 15, textColor, 1015, 430)
         drawText(f"Score: {score}", 20, textColor, 1025, 450)
-        if player.powerUpReceived is not None or player.bulletsActive:
+        if player.isCheating:
+            drawText("Power Up: INVINCIBILITY!!!", 12, textColor, 1010, 475)
+        elif player.powerUpReceived is not None or player.bulletsActive:
             activePowerUp = player.powerUpReceived if player.powerUpReceived is not None else "bullets"
             drawText(f"Power Up : {activePowerUp}", 15, textColor, 1010, 475)
 
+        if cheatEnabled:
+            player.shieldActive = True
+            player.bulletsActive = True
+            player.isCheating = True
         #Game over cause
         if pygame.sprite.spritecollideany(player, enemy_spawner.enemy_group):
-            if player.shieldActive:
+            if player.isCheating:
+                pass
+            elif player.shieldActive:
                 player.shieldActive = False
                 player.shieldSoundPlayed = False
                 player.shieldCoolDownTimer = 60
@@ -177,6 +198,7 @@ def playScreen():
                 player.bulletsActive = False
                 player.shieldCoolDownTimer = 60
             elif player.shieldCoolDownTimer == 0:
+                joystick.rumble(0,1,2000)
                 gameOverScreen(score)
         
 
@@ -261,17 +283,25 @@ def mainMenu():
     pygame.display.set_caption("Main Menu")
     pygame.mixer.music.load("assets/sounds/introSong.mp3")
     pygame.mixer.music.play()
+    colorIndex = 0
+    frameCounter = 0
     run = True
+    cheatEnabled = False
     while run:
-        clock.tick(fps)
         screen.fill((0,0,255))
+        clock.tick(fps)
+        if cheatEnabled:
+            screen.fill(c.FLASHING_COLORS[colorIndex])
+            frameCounter +=1
+            if frameCounter % 10 == 0:
+                colorIndex = (colorIndex + 1) % len(c.FLASHING_COLORS)
         drawText("PERFECT RACER", 40, textColor, 380, 175)
         drawText("Press Start/Enter to begin", 20, textColor, 400, 395)
         drawText("Or press Select/Space for the controls!", 20, textColor, 265, 455)
         drawText("To quit, press the Home button or Escape key", 20, textColor, 215, 515)
-        action = eventHandler.handle_main_menu_events()
+        action, cheatEnabled = eventHandler.handle_main_menu_events()
         if action == "play":
-            playScreen()
+            playScreen(cheatEnabled)
             return
         elif action == "controls":
             controlsMenu()

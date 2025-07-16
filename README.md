@@ -16,6 +16,7 @@ The specifics of what you're checking will be:
         Check to see if the high score is being recorded and displayed correctly. As well as the correct songs playing depending on if you
         beat the high score or didn't
     5. Cheat code:
+        EPILEPSY WARNING: DO NOT USE THE CHEAT CODE IF YOU ARE EPILEPTIC
         Check to see if the cheat code I added works (i won't tell you what the code is :D)
     Bonus: Test controller support:
         If you have a Switch Pro Controller or a PS5 dualsense, guess what? This game is compatible with those! Freakin' epic, amirite? (kill me). If you don't mind, please play with these controllers since the experience is honestly much better. Connect them via USB (could be USB-C to USB-C or USB-C to USB-C).
@@ -25,3 +26,4 @@ If you have any criticism or ideas for this game, do not hesitate to let me know
 
 P.S. do NOT share this with other people *yet*. This beta is to check to see if everything works, and if it all goes swell, 
 expect to see this game in itch.io (for free tho, this shit ain't worth chargning for)
+P.S.S NO, THE SHIELD DOES NOT DISAPPEAR DURING PAUSES. I DON'T KNOW WHY, IF YOU KNOW HOW TO FIX IT, PLEASE HELP ME

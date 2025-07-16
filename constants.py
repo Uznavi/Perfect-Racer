@@ -36,3 +36,10 @@ LG_HAT_NW = (-1,1)
 LG_HAT_SW = (-1,-1)
 LG_HAT_SE = (1,-1)
 LG_HAT_NE = (1,1)
+
+PS_SQUARE = 2
+PS_X = 0
+PS_O = 1
+
+CHEAT_CODE = ["up", "up", "down", "down", "left", "right", "left", "right", "b","a"]
+FLASHING_COLORS = [(255,0,0), (0,255,0), (0,0,255), (255, 255, 0), (255, 0, 255), (0, 255, 255)]

@@ -1,24 +1,67 @@
 import pygame
 import constants as c
+
+cheatInput = []
+cheatCode = c.CHEAT_CODE
+cheatMode = False
 def handle_main_menu_events():
+    global cheatInput, cheatCode, cheatMode
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            return "quit"
+            return "quit", cheatMode
         if event.type == pygame.KEYDOWN:
+            keyMap = {
+                pygame.K_w: "up",
+                pygame.K_s : "down",
+                pygame.K_a : "left",
+                pygame.K_s : "down",
+                pygame.K_q : "b",
+                pygame.K_e : "a"
+                }
             if event.key == pygame.K_RETURN:
-                return "play"
+                return "play", cheatMode
             if event.key == pygame.K_SPACE:
-                return "controls"
+                return "controls", cheatMode
             if event.key == pygame.K_ESCAPE:
-                return "quit"
+                return "quit", cheatMode
+            
+            if event.key in keyMap:
+                cheatInput.append(keyMap[event.key])
+                if len(cheatInput) > len(cheatCode):
+                    cheatInput.pop(0)
+                if cheatInput == cheatCode:
+                    cheatMode = True
         if event.type == pygame.JOYBUTTONDOWN:
+            buttonMap = {
+                c.NS_D_PAD_UP : "up",
+                c.NS_D_PAD_DOWN: "down",
+                c.NS_D_PAD_LEFT : "left",
+                c.NS_D_PAD_RIGHT : "right",
+                c.NS_B : "b",
+                c.NS_A: "a",
+                c.LG_HAT_UP : "up",
+                c.LG_HAT_DOWN : "down",
+                c.LG_HAT_LEFT : "left",
+                c.LG_HAT_RIGHT : "right",
+                c.LG_2 : "b",
+                c.LG_3 : "a",
+                c.PS_X : "b",
+                c.PS_O : "a"
+            }
+            if event.button in buttonMap:
+                cheatInput.append(buttonMap[event.button])
+                if len(cheatInput) > len(cheatCode):
+                    cheatInput.pop(0)
+                if cheatInput == cheatCode:
+                    cheatMode = True
+
             if event.button == c.NS_START or event.button == c.LG_10:
-                return "play"
+                return "play", cheatMode
             if event.button == c.NS_SELECT or event.button == c.LG_9:
-                return "controls"
+                return "controls", cheatMode
             if event.button == c.NS_HOME:
-                return "quit"
-    return None
+                return "quit", cheatMode
+    return None, cheatMode
 
 def handle_controls_screen_events():
     for event in pygame.event.get():
@@ -171,7 +214,7 @@ def handle_gameplay_events(player, showHitboxes):
 
         # D-Pad movement (button down)
         if event.type == pygame.JOYBUTTONDOWN:
-            if event.button == c.LG_1 or event.button == c.NS_Y:
+            if event.button == c.LG_1 or event.button == c.NS_Y or event.button == c.PS_SQUARE:
                 if player.powerUpReceived == "shield":
                     player.shieldActive = True
                     player.powerUpReceived = None
