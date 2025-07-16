@@ -1,4 +1,7 @@
-import pygame, sys
+import io
+import pstats
+import pygame
+import cProfile
 import spritesheet
 import eventHandler
 import constants as c
@@ -55,15 +58,45 @@ for x in range(animationLoop):
     frame_img = pygame.transform.scale(frame_img, (scaled_w, scaled_h))
     animationList.append(frame_img)
 
-#Text function
-#TODO: At some point, make a constant x and y variable to not add a new one every time
+font_cache = {}
+text_cache = {}
+
+def get_font(fontSize):
+    if fontSize not in font_cache:
+        font_cache[fontSize] = pygame.font.Font("assets/font/PressStart2P.ttf", fontSize)
+    return font_cache[fontSize]
+
+def get_cached_text(text, fontSize, textCol):
+    key = (text, fontSize, textCol)
+    if key not in text_cache:
+        font = get_font(fontSize)
+        text_surface = font.render(text, True, textCol)
+        text_cache[key] = text_surface
+    return text_cache[key]
+
 def drawText(text, fontSize, textCol, x, y):
-    scaledFontSize = scaler.scale_font(fontSize)
-    font = pygame.font.Font("assets/font/PressStart2P.ttf", fontSize)
-    text_surface = font.render(text, True, textCol)
-    scaledX, scaledY = scaler.scale_pos(x, y)
+    text_surface = get_cached_text(text, fontSize, textCol)
     screen.blit(text_surface, scaler.scale_pos(x,y))
-#Screen Event Handlers
+
+
+def profile_game():
+    pr = cProfile.Profile()
+    pr.enable()
+    
+    mainMenu()
+    
+    pr.disable()
+    
+    # Create a string buffer to capture the output
+    s = io.StringIO()
+    ps = pstats.Stats(pr, stream=s).sort_stats('tottime')
+    ps.print_stats()
+    
+    # Save to file
+    with open('profile_results.txt', 'w') as f:
+        f.write(s.getvalue())
+    
+    print("Profile saved to profile_results.txt")
 
 def gameOverScreen(score):
     previousHighScore = loadHighScore()
@@ -97,12 +130,12 @@ def gameOverScreen(score):
         drawText("To try again, press Start/Enter", 15, textColor, 400, 500)
         drawText("To go to the menu, press Select/Space", 15, textColor, 400, 520)
         drawText("To quit, press the Home button or Escape key", 15, textColor, 400, 540) 
-        pygame.display.update()
+        pygame.display.flip()
 
         action = eventHandler.handle_game_over_events()
         if action == "quit":
             pygame.quit()
-            sys.exit()
+            return 
         elif action == "play":
             playScreen()
             return
@@ -120,14 +153,14 @@ def pauseScreen():
     screen.blit(overlay, (0, 0))
     drawText("PAUSED", 40, textColor, 525, 300)
     drawText("Press Start/Enter to resume", 20, textColor, 380, 400)
-    pygame.display.update()
+    pygame.display.flip()
     clock.tick(10)
 
     while paused:
         action = eventHandler.handle_pause_screen_events()
         if action == "quit":
             pygame.quit()
-            sys.exit()
+            return
         elif action == "resume":
             pygame.mixer.music.stop()
             pygame.mixer.music.load("assets/sounds/gameSong.mp3")
@@ -232,12 +265,12 @@ def playScreen(cheatEnabled = False):
         action, showHitboxes = eventHandler.handle_gameplay_events(player, showHitboxes)
         if action == "quit":
             pygame.quit()
-            sys.exit()
+            return 
         elif action == "pause":
             result = pauseScreen()
             if result == "quit":
                 pygame.quit()
-                sys.exit()
+                return 
 
 
         spriteGroup.draw(screen)
@@ -258,7 +291,7 @@ def playScreen(cheatEnabled = False):
         itemBox_spawner.update()
         particles.update()
         particles.draw(screen)
-        pygame.display.update()
+        pygame.display.flip()
 
 def controlsMenu():
     pygame.display.set_caption("Controls")
@@ -274,11 +307,11 @@ def controlsMenu():
         action = eventHandler.handle_controls_screen_events()
         if action == "quit":
             pygame.quit()
-            sys.exit()
+            return 
         elif action == "main_menu":
             mainMenu()
             return
-        pygame.display.update()
+        pygame.display.flip()
 
 def mainMenu():
     pygame.display.set_caption("Main Menu")
@@ -309,7 +342,7 @@ def mainMenu():
             return
         elif action == "quit":
             pygame.quit()
-            sys.exit()
-        pygame.display.update()
+            return 
+        pygame.display.flip()
 
-mainMenu()
+profile_game()
