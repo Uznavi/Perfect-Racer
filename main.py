@@ -121,7 +121,7 @@ def gameOverScreen(score):
 
         if isNewHighScore:
             flashTimer +=1
-            if flashTimer % 10 == 0:
+            if flashTimer % 30 == 0:
                 flashIndex = (flashIndex + 1) % len(c.FLASHING_COLORS)
             drawText(resultMessage, 15, c.FLASHING_COLORS[flashIndex], 350, 400)
         else:

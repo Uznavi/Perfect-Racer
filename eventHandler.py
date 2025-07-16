@@ -14,7 +14,7 @@ def handle_main_menu_events():
                 pygame.K_w: "up",
                 pygame.K_s : "down",
                 pygame.K_a : "left",
-                pygame.K_s : "down",
+                pygame.K_d : "right",
                 pygame.K_q : "b",
                 pygame.K_e : "a"
                 }
