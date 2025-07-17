@@ -1,5 +1,6 @@
 import pygame
 import constants as c
+import time
 
 cheatInput = []
 cheatCode = c.CHEAT_CODE
@@ -133,11 +134,18 @@ def handle_gameplay_events(player, showHitboxes):
             if event.key == pygame.K_s:
                 player.vel_y = player.speed
             if event.key == pygame.K_y:
-                if player.powerUpReceived == "shield":
+                if player.powerUpReceived == "shield" and not player.shieldActive:
                     player.shieldActive = True
+                    player.shieldStartTime = int(time.time())
+                    player.shieldRemaining = player.shieldTimer
+                    player.shieldSound.play()
+                    player.shieldSoundPlayed = True
+                    player.powerUpReceived = None
                     player.powerUpReceived = None
                 elif player.powerUpReceived == "bullets":
                     player.bulletsActive = True
+                    player.bulletAmount = 20
+                    player.lastBulletTime = pygame.time.get_ticks()
                     player.powerUpReceived = None
                 elif player.bulletsActive:
                     player.shoot()
@@ -220,6 +228,8 @@ def handle_gameplay_events(player, showHitboxes):
                     player.powerUpReceived = None
                 elif player.powerUpReceived == "bullets":
                     player.bulletsActive = True
+                    player.bulletAmount = 20
+                    player.lastBulletTime = pygame.time.get_ticks()
                     player.powerUpReceived = None
                 elif player.bulletsActive:
                     player.shoot()

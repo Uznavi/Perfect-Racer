@@ -1,4 +1,5 @@
-#TODO : Set a timer for the shield, and make the item boxes spawn every ten seconds, and add a bomb powerup
+#TODO :Make the item boxes spawn every ten seconds, and add a bomb powerup
+#TODO : If the cheat code is activated, remove the limitations of the bullets and the shield (when implemented)
 import io
 import pstats
 import pygame
@@ -7,6 +8,7 @@ import spritesheet
 import eventHandler
 import constants as c
 import sys
+import time
 # from itemBox import ItemBox
 from scaler import GameScaler, set_scaler
 #TODO : At the end, clean up the main file and add stuff to other files, like constants and stuff
@@ -191,7 +193,6 @@ def playScreen(cheatEnabled = False):
     pygame.display.set_caption("Game")
     pygame.mixer.music.load("assets/sounds/gameSong.mp3")
     pygame.mixer.music.play(-1)
-    shieldSound = pygame.mixer.Sound("assets/sounds/shield.ogg")
     hitSound = pygame.mixer.Sound("assets/sounds/explosion.wav")
     run = True
     lastUpdate = pygame.time.get_ticks()
@@ -224,6 +225,7 @@ def playScreen(cheatEnabled = False):
         x = (game_width - frame_image.get_width()) // 2
         y = (game_height - frame_image.get_height()) // 2
         game_surface.blit(frame_image, (x, y))
+        #TODO: Fix these coordinates and sizes, it's bad
         drawText(f"High Score: {high_score}", 10, textColor, 1015, 430)
         drawText(f"Score: {score}", 15, textColor, 1025, 450)
         if player.isCheating:
@@ -233,6 +235,8 @@ def playScreen(cheatEnabled = False):
             drawText(f"Power Up : {activePowerUp}", 10, textColor, 1010, 475)
         if player.bulletsActive:
             drawText(f"Bullets: {player.bulletAmount}", 10, textColor, 1010, 490)
+        if player.shieldActive:
+            drawText(f"Shield : {player.shieldRemaining}", 10, textColor, 1010, 490)
 
         if cheatEnabled:
             player.shieldActive = True
@@ -258,13 +262,11 @@ def playScreen(cheatEnabled = False):
             if player.isCheating:
                 pass
             elif player.shieldActive:
-                # hitSound.play()
-                # for _ in range(15):
-                #     particles.add(Particle(enemyHit.rect.center))
-                # enemyHit.kill()
-                # score +=100
-                player.shieldActive = False
-                player.shieldCoolDownTimer = 60
+                hitSound.play()
+                for _ in range(15):
+                    particles.add(Particle(enemyHit.rect.center))
+                enemyHit.kill()
+                score +=100
             elif player.bulletsActive:
                 player.bulletsActive = False
                 player.shieldCoolDownTimer = 60
@@ -289,6 +291,17 @@ def playScreen(cheatEnabled = False):
             )
             shield_rect = shieldSurface.get_rect(center = player.rect.center)
             game_surface.blit(shieldSurface, shield_rect)
+        
+        if player.shieldActive and not player.isCheating:
+            secondsElapsed = int(time.time()) - player.shieldStartTime
+            player.shieldRemaining = max(0, player.shieldTimer - secondsElapsed)
+
+            if player.shieldRemaining <= 0:
+                player.shieldActive = False
+                player.shieldSoundPlayed = False
+                player.powerUpReceived = None
+                player.shieldCoolDownTimer = 60
+
         
         if showHitboxes:        
             for enemy in enemy_spawner.enemy_group:

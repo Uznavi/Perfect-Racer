@@ -19,7 +19,11 @@ class PlayerCar(pygame.sprite.Sprite):
                        # Depending on the playtests, I'll change it, but at the same time, it feels good, so it won't be changed :D
         self.powerUpReceived = None
         self.shieldActive = False
+        self.shieldTimer = 10
+        self.shieldRemaining = 0
+        self.shieldStartTime = None
         self.shieldSoundPlayed = False
+        self.shieldSound = pygame.mixer.Sound("assets/sounds/shield.ogg")
         self.bulletsActive = False
         self.bulletAmount = 20
         self.bulletSound = pygame.mixer.Sound("assets/sounds/shootingSound.ogg")
@@ -62,4 +66,4 @@ class PlayerCar(pygame.sprite.Sprite):
                 self.bulletAmount -=1
                 if self.bulletAmount <= 0:
                     self.bulletsActive = False
-                    self.bulletAmount = 20
+                    # self.bulletAmount = 20
