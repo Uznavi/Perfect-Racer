@@ -1,4 +1,4 @@
-#TODO : If the game looks better on the screens, fix all the squishiness and boundaries
+#TODO : Set a timer for the shield, and make the item boxes spawn every ten seconds, and add a bomb powerup
 import io
 import pstats
 import pygame
@@ -224,46 +224,62 @@ def playScreen(cheatEnabled = False):
         x = (game_width - frame_image.get_width()) // 2
         y = (game_height - frame_image.get_height()) // 2
         game_surface.blit(frame_image, (x, y))
-        drawText(f"High Score: {high_score}", 15, textColor, 1015, 430)
-        drawText(f"Score: {score}", 20, textColor, 1025, 450)
+        drawText(f"High Score: {high_score}", 10, textColor, 1015, 430)
+        drawText(f"Score: {score}", 15, textColor, 1025, 450)
         if player.isCheating:
             drawText("Power Up: INVINCIBILITY!!!", 12, textColor, 1010, 475)
         elif player.powerUpReceived is not None or player.bulletsActive:
             activePowerUp = player.powerUpReceived if player.powerUpReceived is not None else "bullets"
-            drawText(f"Power Up : {activePowerUp}", 15, textColor, 1010, 475)
+            drawText(f"Power Up : {activePowerUp}", 10, textColor, 1010, 475)
+        if player.bulletsActive:
+            drawText(f"Bullets: {player.bulletAmount}", 10, textColor, 1010, 490)
 
         if cheatEnabled:
             player.shieldActive = True
             player.bulletsActive = True
             player.isCheating = True
         #Game over cause
-        if pygame.sprite.spritecollideany(player, enemy_spawner.enemy_group):
+        # if pygame.sprite.spritecollideany(player, enemy_spawner.enemy_group):
+        #     if player.isCheating:
+        #         pass
+        #     # elif player.shieldActive:
+        #     #     player.shieldActive = False
+        #     #     player.shieldSoundPlayed = False
+        #     #     player.shieldCoolDownTimer = 60
+        #     elif player.bulletsActive:
+        #         player.bulletsActive = False
+        #         player.shieldCoolDownTimer = 60
+        #     elif player.shieldCoolDownTimer == 0:
+        #         if joystick: 
+        #             joystick.rumble(0,1,2000)
+        #         gameOverScreen(score)
+        enemyHit = pygame.sprite.spritecollideany(player, enemy_spawner.enemy_group)
+        if enemyHit:
             if player.isCheating:
                 pass
             elif player.shieldActive:
+                # hitSound.play()
+                # for _ in range(15):
+                #     particles.add(Particle(enemyHit.rect.center))
+                # enemyHit.kill()
+                # score +=100
                 player.shieldActive = False
-                player.shieldSoundPlayed = False
                 player.shieldCoolDownTimer = 60
             elif player.bulletsActive:
                 player.bulletsActive = False
                 player.shieldCoolDownTimer = 60
             elif player.shieldCoolDownTimer == 0:
-                if joystick: 
+                if joystick:
                     joystick.rumble(0,1,2000)
                 gameOverScreen(score)
         
-
         #Item box hitting logic
         item_box_hit = pygame.sprite.spritecollideany(player, itemBox_spawner.itemBox_group)
         if item_box_hit:
             if not player.shieldActive and not player.bulletsActive and player.powerUpReceived is None:
                 player.powerUpReceived = item_box_hit.powerUp
             item_box_hit.kill()
-        
-        if player.shieldActive and not player.shieldSoundPlayed:
-            shieldSound.play()
-            player.shieldSoundPlayed = True
-        
+
         if player.shieldActive:
             shieldSurface = pygame.Surface((player.rect.width*2, player.rect.height*2), pygame.SRCALPHA)
             pygame.draw.ellipse(
