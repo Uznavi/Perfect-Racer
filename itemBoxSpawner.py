@@ -1,20 +1,21 @@
 import pygame
 import random
 import constants as c
+import time
 from itemBox import ItemBox
 
 class ItemBoxSpawner():
     def __init__(self):
         self.itemBox_group = pygame.sprite.Group()
-        self.itemBox_spawn_timer = random.randrange(300, 600)
+        self.itemBox_spawn_timer = 10
+        self.lastSpawnTime = time.time()
     
     def update(self):
         self.itemBox_group.update()
-        if self.itemBox_spawn_timer == 0:
+        currentTime = time.time()
+        if currentTime - self.lastSpawnTime >= self.itemBox_spawn_timer:
             self.spawnItemBox()
-            self.itemBox_spawn_timer = random.randrange(300, 600)
-        else:
-            self.itemBox_spawn_timer -=1
+            self.lastSpawnTime = currentTime
     
     def spawnItemBox(self):
         for laneX in range(len(c.LANE_X_POSITION_BOXES)):
