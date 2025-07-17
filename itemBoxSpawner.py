@@ -7,7 +7,7 @@ from itemBox import ItemBox
 class ItemBoxSpawner():
     def __init__(self):
         self.itemBox_group = pygame.sprite.Group()
-        self.itemBox_spawn_timer = 10
+        self.itemBox_spawn_timer = 15
         self.lastSpawnTime = time.time()
     
     def update(self):
