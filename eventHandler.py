@@ -141,7 +141,7 @@ def handle_gameplay_events(player, showHitboxes):
                     player.shieldSound.play()
                     player.shieldSoundPlayed = True
                     player.powerUpReceived = None
-                    player.powerUpReceived = None
+                    # player.powerUpReceived = None
                 elif player.powerUpReceived == "bullets":
                     player.bulletsActive = True
                     player.bulletAmount = 20
@@ -223,8 +223,12 @@ def handle_gameplay_events(player, showHitboxes):
         # D-Pad movement (button down)
         if event.type == pygame.JOYBUTTONDOWN:
             if event.button == c.LG_1 or event.button == c.NS_Y or event.button == c.PS_SQUARE:
-                if player.powerUpReceived == "shield":
+                if player.powerUpReceived == "shield" and not player.shieldActive:
                     player.shieldActive = True
+                    player.shieldStartTime = int(time.time())
+                    player.shieldRemaining = player.shieldTimer
+                    player.shieldSound.play()
+                    player.shieldSoundPlayed = True
                     player.powerUpReceived = None
                 elif player.powerUpReceived == "bullets":
                     player.bulletsActive = True
