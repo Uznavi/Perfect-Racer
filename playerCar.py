@@ -60,3 +60,6 @@ class PlayerCar(pygame.sprite.Sprite):
                 self.lastBulletTime = current_time
                 self.bulletSound.play()
                 self.bulletAmount -=1
+                if self.bulletAmount <= 0:
+                    self.bulletsActive = False
+                    self.bulletAmount = 20
