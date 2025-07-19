@@ -173,6 +173,7 @@ def pauseScreen():
     game_surface.blit(overlay, (0, 0))
     drawText("PAUSED", 40, textColor, 525, 300)
     drawText("Press Start/Enter to resume", 20, textColor, 380, 400)
+    drawText("To quit, press the Home button or the Escape key", 15, textColor, 300, 440)
     blitScaled()
     clock.tick(10)
 
@@ -318,10 +319,7 @@ def playScreen(cheatEnabled = False):
                 pygame.draw.rect(game_surface, (0,255,0), player.rect, 2)
 
         action, showHitboxes = eventHandler.handle_gameplay_events(player, showHitboxes)
-        if action == "quit":
-            pygame.quit()
-            sys.exit()
-        elif action == "pause":
+        if action == "pause":
             result = pauseScreen()
             if result == "quit":
                 pygame.quit()

@@ -40,12 +40,6 @@ def handle_main_menu_events():
                 c.NS_D_PAD_RIGHT : "right",
                 c.NS_B : "b",
                 c.NS_A: "a",
-                c.LG_HAT_UP : "up",
-                c.LG_HAT_DOWN : "down",
-                c.LG_HAT_LEFT : "left",
-                c.LG_HAT_RIGHT : "right",
-                c.LG_2 : "b",
-                c.LG_3 : "a",
                 c.PS_X : "b",
                 c.PS_O : "a"
             }
@@ -56,9 +50,9 @@ def handle_main_menu_events():
                 if cheatInput == cheatCode:
                     cheatMode = True
 
-            if event.button == c.NS_START or event.button == c.LG_10:
+            if event.button == c.NS_START:
                 return "play", cheatMode
-            if event.button == c.NS_SELECT or event.button == c.LG_9:
+            if event.button == c.NS_SELECT:
                 return "controls", cheatMode
             if event.button == c.NS_HOME:
                 return "quit", cheatMode
@@ -74,7 +68,7 @@ def handle_controls_screen_events():
             if event.key == pygame.K_ESCAPE:
                 return "quit"
         if event.type == pygame.JOYBUTTONDOWN:
-            if event.button == c.NS_SELECT or event.button == c.LG_9:
+            if event.button == c.NS_SELECT:
                 return "main_menu"
             if event.button == c.NS_HOME:
                 return "quit"
@@ -92,9 +86,9 @@ def handle_game_over_events():
             if event.key == pygame.K_SPACE:
                 return "main_menu"
         if event.type == pygame.JOYBUTTONDOWN:
-            if event.button == c.NS_START or event.button ==  c.LG_10:
+            if event.button == c.NS_START:
                 return "play"
-            if event.button == c.NS_SELECT or event.button == c.LG_9:
+            if event.button == c.NS_SELECT:
                 return "main_menu"
             if event.button == c.NS_HOME:
                 return "quit"
@@ -110,7 +104,7 @@ def handle_pause_screen_events():
             if event.key == pygame.K_RETURN:
                 return "resume"
         if event.type == pygame.JOYBUTTONDOWN:
-            if event.button == c.NS_START or event.button == c.LG_10:
+            if event.button == c.NS_START:
                 return "resume"
             if event.button == c.NS_HOME:
                 return "quit"
@@ -118,9 +112,6 @@ def handle_pause_screen_events():
 
 def handle_gameplay_events(player, showHitboxes):
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            return "quit", showHitboxes
-
         # Keyboard input
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
@@ -174,55 +165,10 @@ def handle_gameplay_events(player, showHitboxes):
                     player.vel_x = 0
                 if event.axis == 1 and player.last_input == "analog":
                     player.vel_y = 0
-        
-        if event.type == pygame.JOYHATMOTION:
-            direction = event.value
-
-            if direction == c.LG_HAT_LEFT:
-                player.last_input = "hat"
-                player.vel_x = -player.speed
-            
-            if direction == c.LG_HAT_RIGHT:
-                player.last_input = "hat"
-                player.vel_x = player.speed
-            
-            if direction == c.LG_HAT_UP:
-                player.last_input = 'hat'
-                player.vel_y = -player.speed
-
-            if direction == c.LG_HAT_DOWN:
-                player.last_input = "hat"
-                player.vel_y = player.speed
-            
-            if direction == c.LG_HAT_NW:
-                player.last_input = "hat"
-                player.vel_x = -player.speed
-                player.vel_y = -player.speed
-            
-            if direction == c.LG_HAT_SW:
-                player.last_input = "hat"
-                player.vel_x = -player.speed
-                player.vel_y = player.speed
-            
-            if direction == c.LG_HAT_NE:
-                player.last_input = "hat"
-                player.vel_x = player.speed
-                player.vel_y = -player.speed
-            
-            if direction == c.LG_HAT_SE:
-                player.last_input = "hat"
-                player.vel_x = player.speed
-                player.vel_y = player.speed
-            
-            if direction[1] == 0 and player.last_input == "hat":
-                player.vel_y = 0
-            
-            if direction[0] == 0 and player.last_input == "hat":
-                player.vel_x = 0
 
         # D-Pad movement (button down)
         if event.type == pygame.JOYBUTTONDOWN:
-            if event.button == c.LG_1 or event.button == c.NS_Y or event.button == c.PS_SQUARE:
+            if event.button == c.NS_Y or event.button == c.PS_SQUARE:
                 if player.powerUpReceived == "shield" and not player.shieldActive:
                     player.shieldActive = True
                     player.shieldStartTime = int(time.time())
@@ -238,7 +184,7 @@ def handle_gameplay_events(player, showHitboxes):
                 elif player.bulletsActive:
                     player.shoot()
                 player.powerUpReceived = None
-            if event.button == c.NS_START or event.button == c.LG_10:
+            if event.button == c.NS_START:
                 return "pause", showHitboxes
             if event.button == c.NS_HOME:
                 return "quit", showHitboxes

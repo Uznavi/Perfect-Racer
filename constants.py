@@ -23,20 +23,6 @@ NS_D_PAD_RIGHT = 14
 NS_D_PAD_UP = 11
 NS_D_PAD_DOWN = 12
 
-LG_1 = 0
-LG_2 = 1
-LG_3 = 2
-LG_10 = 9
-LG_9 = 8
-LG_HAT_UP = (0,1)
-LG_HAT_DOWN = (0,-1)
-LG_HAT_LEFT = (-1,0)
-LG_HAT_RIGHT = (1,0)
-LG_HAT_NW = (-1,1)
-LG_HAT_SW = (-1,-1)
-LG_HAT_SE = (1,-1)
-LG_HAT_NE = (1,1)
-
 PS_SQUARE = 2
 PS_X = 0
 PS_O = 1
