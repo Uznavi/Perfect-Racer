@@ -55,7 +55,7 @@ class PlayerCar(pygame.sprite.Sprite):
 
     def shoot(self):
         current_time = pygame.time.get_ticks()
-        if self.bulletsActive and self.bulletAmount > 0:
+        if self.bulletsActive and (self.bulletAmount > 0 or self.isCheating):
             if current_time - self.lastBulletTime >= self.bulletCooldown:
                 newBullet = Bullet()
                 newBullet.rect.centerx = self.rect.centerx
@@ -63,7 +63,7 @@ class PlayerCar(pygame.sprite.Sprite):
                 self.bullets.add(newBullet)
                 self.lastBulletTime = current_time
                 self.bulletSound.play()
-                self.bulletAmount -=1
-                if self.bulletAmount <= 0:
-                    self.bulletsActive = False
-                    # self.bulletAmount = 20
+                if not self.isCheating:
+                    self.bulletAmount -=1
+                    if self.bulletAmount <= 0:
+                        self.bulletsActive = False

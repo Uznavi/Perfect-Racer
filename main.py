@@ -1,5 +1,4 @@
-#TODO :Make the item boxes spawn every ten seconds, and add a bomb powerup
-#TODO : If the cheat code is activated, remove the limitations of the bullets and the shield (when implemented)
+#TODO :Add a bomb powerup
 import io
 import pstats
 import pygame
@@ -36,6 +35,7 @@ game_width, game_height = 1300, 720
 game_surface = pygame.Surface((game_width, game_height))
 #Sprite Sheet Information and Text Color
 imageSpriteSheet = pygame.image.load("assets/images/B i g  r o a d.png").convert_alpha()
+#https://youtu.be/hkHCnZ5GrNc?si=wOGnEHV1oCfcrvGG&t=713 context behind the name cuz i felt silly
 spriteSheet = spritesheet.SpriteSheet(imageSpriteSheet)
 textColor = (255,255,255)
 #Animation process
@@ -226,17 +226,18 @@ def playScreen(cheatEnabled = False):
         y = (game_height - frame_image.get_height()) // 2
         game_surface.blit(frame_image, (x, y))
         #TODO: Fix these coordinates and sizes, it's bad
-        drawText(f"High Score: {high_score}", 10, textColor, 1015, 430)
-        drawText(f"Score: {score}", 15, textColor, 1025, 450)
+        drawText(f"High Score: {high_score}", 14, textColor, 1050, 430)
+        drawText(f"Score: {score}", 15, textColor, 1050, 450)
         if player.isCheating:
-            drawText("Power Up: INVINCIBILITY!!!", 12, textColor, 1010, 475)
-        elif player.powerUpReceived is not None or player.bulletsActive:
-            activePowerUp = player.powerUpReceived if player.powerUpReceived is not None else "bullets"
-            drawText(f"Power Up : {activePowerUp}", 10, textColor, 1010, 475)
-        if player.bulletsActive:
-            drawText(f"Bullets: {player.bulletAmount}", 10, textColor, 1010, 490)
-        if player.shieldActive:
-            drawText(f"Shield : {player.shieldRemaining}", 10, textColor, 1010, 490)
+            drawText("Power Up: INVINCIBILITY!", 10, textColor, 1045, 475)
+        else:
+            if player.powerUpReceived is not None or player.bulletsActive:
+                activePowerUp = player.powerUpReceived if player.powerUpReceived is not None else "bullets"
+                drawText(f"Power Up : {activePowerUp}", 13, textColor, 1050, 475)  
+            if player.bulletsActive:
+                drawText(f"Bullets: {player.bulletAmount}", 13, textColor, 1050, 490)
+            if player.shieldActive:
+                drawText(f"Shield : {player.shieldRemaining}", 13, textColor, 1050, 490)
 
         if cheatEnabled:
             player.shieldActive = True
@@ -260,7 +261,11 @@ def playScreen(cheatEnabled = False):
         enemyHit = pygame.sprite.spritecollideany(player, enemy_spawner.enemy_group)
         if enemyHit:
             if player.isCheating:
-                pass
+                hitSound.play()
+                for _ in range(15):
+                    particles.add(Particle(enemyHit.rect.center))
+                enemyHit.kill()
+                score +=100
             elif player.shieldActive:
                 hitSound.play()
                 for _ in range(15):
@@ -270,6 +275,11 @@ def playScreen(cheatEnabled = False):
             elif player.bulletsActive:
                 player.bulletsActive = False
                 player.shieldCoolDownTimer = 60
+            elif player.shieldCoolDownTimer != 0:
+                hitSound.play()
+                for _ in range(15):
+                    particles.add(Particle(enemyHit.rect.center))
+                enemyHit.kill()
             elif player.shieldCoolDownTimer == 0:
                 if joystick:
                     joystick.rumble(0,1,2000)
@@ -295,7 +305,6 @@ def playScreen(cheatEnabled = False):
         if player.shieldActive and not player.isCheating:
             secondsElapsed = int(time.time()) - player.shieldStartTime
             player.shieldRemaining = max(0, player.shieldTimer - secondsElapsed)
-
             if player.shieldRemaining <= 0:
                 player.shieldActive = False
                 player.shieldSoundPlayed = False
@@ -347,8 +356,8 @@ def controlsMenu():
         clock.tick(fps)
         drawText("CONTROLS", 40, textColor, 495, 125)
         drawText("D-Pad / WASD: Directional Movement (Up, Down, Left, Right)", 20, textColor, 70, 350)
-        drawText("Y/Triangle: Power-Up (Can only be used when in inventory)", 20, textColor, 80, 395)
-        drawText("This game supports DualSense, Switch Pro Controller, and LG Dual Action", 15, textColor, 125, 450)
+        drawText("Y/Square: Power-Up (Can only be used when in inventory)", 20, textColor, 100, 395)
+        drawText("This game supports PS5 DualSense and Switch Pro Controller", 15, textColor, 210, 450)
         drawText("Press Select/Space again to go back to the title screen", 10, textColor, 370, 500)
         action = eventHandler.handle_controls_screen_events()
         if action == "quit":
