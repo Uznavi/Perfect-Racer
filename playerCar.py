@@ -30,6 +30,7 @@ class PlayerCar(pygame.sprite.Sprite):
         self.shieldCoolDownTimer = 0
         self.lastBulletTime = 0
         self.bulletCooldown = 200
+        self.bombActive = False
         self.last_input = "none"
         self.isCheating = False
 

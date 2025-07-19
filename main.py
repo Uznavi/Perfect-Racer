@@ -324,6 +324,15 @@ def playScreen(cheatEnabled = False):
             if result == "quit":
                 pygame.quit()
                 sys.exit()
+        elif action == "bomb" and player.powerUpReceived == "bomb":
+            carsHit = len(enemy_spawner.enemy_group)
+            for enemy in enemy_spawner.enemy_group:
+                hitSound.play()
+                for _ in range(15):
+                    particles.add(Particle(enemy.rect.center))
+                enemy.kill()
+            score += carsHit * 100
+            player.powerUpReceived = None
 
 
         spriteGroup.draw(game_surface)

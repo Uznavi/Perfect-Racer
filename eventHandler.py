@@ -133,6 +133,9 @@ def handle_gameplay_events(player, showHitboxes):
                     player.shieldSoundPlayed = True
                     player.powerUpReceived = None
                     # player.powerUpReceived = None
+                elif player.powerUpReceived == "bomb":
+                    player.bombActive = True
+                    return "bomb", showHitboxes
                 elif player.powerUpReceived == "bullets":
                     player.bulletsActive = True
                     player.bulletAmount = 20
@@ -176,6 +179,9 @@ def handle_gameplay_events(player, showHitboxes):
                     player.shieldSound.play()
                     player.shieldSoundPlayed = True
                     player.powerUpReceived = None
+                elif player.powerUpReceived == "bomb":
+                    player.bombActive = True
+                    return "bomb", showHitboxes
                 elif player.powerUpReceived == "bullets":
                     player.bulletsActive = True
                     player.bulletAmount = 20
