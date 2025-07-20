@@ -132,18 +132,18 @@ def playScreen(screen, game_surface, clock, joystick, scaler, cheatEnabled=False
         x = (c.game_width - frame_image.get_width()) // 2
         y = (c.game_height - frame_image.get_height()) // 2
         game_surface.blit(frame_image, (x, y))
-        drawText(f"High Score: {high_score}", 14, c.textColor, 1050, 430, game_surface, scaler)
-        drawText(f"Score: {score}", 15, c.textColor, 1050, 450, game_surface, scaler)
+        drawText(f"High Score: {high_score}", 14, c.textColor, 1065, 430, game_surface, scaler)
+        drawText(f"Score: {score}", 15, c.textColor, 1065, 450, game_surface, scaler)
         if player.isCheating:
-            drawText("Power Up: INVINCIBILITY!", 10, c.textColor, 1045, 475, game_surface, scaler)
+            drawText("Power Up: INVINCIBILITY!", 10, c.textColor, 1065, 475, game_surface, scaler)
         else:
             if player.powerUpReceived is not None or player.bulletsActive:
                 activePowerUp = player.powerUpReceived if player.powerUpReceived is not None else "bullets"
-                drawText(f"Power Up : {activePowerUp}", 13, c.textColor, 1050, 475, game_surface, scaler)
+                drawText(f"Power Up : {activePowerUp}", 13, c.textColor, 1065, 475, game_surface, scaler)
             if player.bulletsActive:
-                drawText(f"Bullets: {player.bulletAmount}", 13, c.textColor, 1050, 490, game_surface, scaler)
+                drawText(f"Bullets: {player.bulletAmount}", 13, c.textColor, 1065, 490, game_surface, scaler)
             if player.shieldActive:
-                drawText(f"Shield : {player.shieldRemaining}", 13, c.textColor, 1050, 490, game_surface, scaler)
+                drawText(f"Shield : {player.shieldRemaining}", 13, c.textColor, 1065, 490, game_surface, scaler)
         if cheatEnabled:
             player.shieldActive = True
             player.bulletsActive = True
@@ -203,7 +203,12 @@ def playScreen(screen, game_surface, clock, joystick, scaler, cheatEnabled=False
                 pygame.draw.rect(game_surface, (0,255,0), player.rect, 2)
         action, showHitboxes = eventHandler.handle_gameplay_events(player, showHitboxes)
         if action == "pause":
+            pauseStartTime = time.time()
             result = pauseScreen(screen, game_surface, clock, joystick, scaler)
+            pauseEndTime = time.time()
+            pausedDuration = int(pauseEndTime - pauseStartTime)
+            if result == "resume" and player.shieldActive and player.shieldRemaining is not None:
+                player.shieldStartTime += pausedDuration
             if result == "quit":
                 pygame.quit()
                 sys.exit()

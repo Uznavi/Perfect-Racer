@@ -1,7 +1,6 @@
 #General information
 fps = 60
 game_width, game_height = 1300, 720
-#Sprite Sheet Information and Text Color
 textColor = (255,255,255)
 #Animation process
 animationLoop = 5
@@ -22,7 +21,6 @@ LANE_X_POSITION_BOXES = [540, 625, 705, 791]
 # F.M.R = Far Middle Right
 # F.R = Far Right
 POWER_UPS = ["shield", "bullets", "bomb"]
-
 
 #CONTROLLER INPUTS
 NS_A = 0
