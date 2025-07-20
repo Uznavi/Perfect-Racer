@@ -2,10 +2,10 @@ import pygame
 import random
 import constants as c
 from enemyCar import Enemy
-from scaler import scaler
 
 class EnemySpawner:
-    def __init__(self):
+    def __init__(self, scaler):
+        self.scaler = scaler  # Store scaler for use in methods
         self.enemy_group = pygame.sprite.Group()
         self.spawn_timer = random.randrange(30, 60)
     
@@ -18,11 +18,11 @@ class EnemySpawner:
             self.spawn_timer -= 1
 
     def spawnEnemy(self):
-        _, minDistanceY = scaler.scale_pos(0, 435)
-        minDistanceX, _ = scaler.scale_pos(40, 0)
+        _, minDistanceY = self.scaler.scale_pos(0, 435)
+        minDistanceX, _ = self.scaler.scale_pos(40, 0)
         freeLanes = []
         for idx, lane_x in enumerate(c.LANE_X_POSITION):
-            scaled_lane_x, _ = scaler.scale_pos(lane_x, 0)
+            scaled_lane_x, _ = self.scaler.scale_pos(lane_x, 0)
             lane_free = True
             for enemy in self.enemy_group:
                 if (
@@ -35,5 +35,5 @@ class EnemySpawner:
                 freeLanes.append(idx)
         if freeLanes:
             lane_idx = random.choice(freeLanes)
-            newEnemy = Enemy(lane_idx)
+            newEnemy = Enemy(lane_idx, self.scaler)
             self.enemy_group.add(newEnemy)

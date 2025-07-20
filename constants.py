@@ -1,6 +1,18 @@
-LANE_X_POSITION = [535, 617, 655, 695, 775]
+#General information
+fps = 60
+game_width, game_height = 1300, 720
+#Sprite Sheet Information and Text Color
+textColor = (255,255,255)
+#Animation process
+animationLoop = 5
+animationCooldown = 10
+FRAME_WIDTH = 100
+FRAME_HEIGHT = 100
+HEIGHT_MULTIPLIER = 1.1
+
+LANE_X_POSITION = [540, 625, 665, 705, 791]
 #                 F.L  C.L  C  C.R  F.R
-LANE_X_POSITION_BOXES = [535, 617, 695, 775]
+LANE_X_POSITION_BOXES = [540, 625, 705, 791]
 #LEGEND: 
 # F.L = Far left
 # F.M.L = Far Middle Left

@@ -1,22 +1,21 @@
 import pygame
-from scaler import scaler
 from bullet import Bullet
 
 class PlayerCar(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, scaler):
         super(PlayerCar, self).__init__()
+        self.scaler = scaler  # Store scaler for use in methods
         self.image = pygame.image.load("assets/images/PlayerCar.png").convert_alpha()
         DESIGN_CAR_WIDTH = 40 
         DESIGN_CAR_HEIGHT = 85  # adjust as needed
-        scaled_w, scaled_h = scaler.scale_size(DESIGN_CAR_WIDTH, DESIGN_CAR_HEIGHT)
+        scaled_w, scaled_h = self.scaler.scale_size(DESIGN_CAR_WIDTH, DESIGN_CAR_HEIGHT)
         self.image = pygame.transform.scale(self.image, (scaled_w, scaled_h))
         self.rect = self.image.get_rect()
-        self.rect.centerx, self.rect.centery = scaler.scale_pos(655, 680)
+        self.rect.centerx, self.rect.centery = self.scaler.scale_pos(665, 680)
         self.bullets = pygame.sprite.Group()
         self.vel_x = 0 #initial speeds
         self.vel_y = 0
         self.speed = 5 # Speed of movement, will be changed depending on the feel
-                       # Depending on the playtests, I'll change it, but at the same time, it feels good, so it won't be changed :D
         self.powerUpReceived = None
         self.shieldActive = False
         self.shieldTimer = 10
@@ -37,10 +36,10 @@ class PlayerCar(pygame.sprite.Sprite):
     def update(self):
         self.bullets.update()
         self.rect.centerx += self.vel_x
-        min_x, _ = scaler.scale_pos(535, 0)
-        max_x, _ = scaler.scale_pos(775, 0)
-        _, min_y = scaler.scale_pos(0, 40)
-        _, max_y = scaler.scale_pos(0, 680)
+        min_x, _ = self.scaler.scale_pos(540, 0)
+        max_x, _ = self.scaler.scale_pos(791, 0)
+        _, min_y = self.scaler.scale_pos(0, 40)
+        _, max_y = self.scaler.scale_pos(0, 680)
 
         if self.rect.centerx <= min_x:
             self.rect.centerx = min_x
@@ -58,7 +57,7 @@ class PlayerCar(pygame.sprite.Sprite):
         current_time = pygame.time.get_ticks()
         if self.bulletsActive and (self.bulletAmount > 0 or self.isCheating):
             if current_time - self.lastBulletTime >= self.bulletCooldown:
-                newBullet = Bullet()
+                newBullet = Bullet(self.scaler)
                 newBullet.rect.centerx = self.rect.centerx
                 newBullet.rect.bottom = self.rect.top 
                 self.bullets.add(newBullet)

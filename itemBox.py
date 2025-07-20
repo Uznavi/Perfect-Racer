@@ -1,17 +1,17 @@
 import pygame
 import random
 import constants as c
-from scaler import scaler
 
 class ItemBox(pygame.sprite.Sprite):
-    def __init__(self, lane_idx):
+    def __init__(self, lane_idx, scaler):
         super(ItemBox, self).__init__()
+        self.scaler = scaler  # Store scaler for use in methods
         DESIGN_BOX_SIZE = 40  # Change this to your preferred box size
         self.image = pygame.image.load("assets/images/itemBox.png")
-        scaled_w, scaled_h = scaler.scale_size(DESIGN_BOX_SIZE, DESIGN_BOX_SIZE)
+        scaled_w, scaled_h = self.scaler.scale_size(DESIGN_BOX_SIZE, DESIGN_BOX_SIZE)
         self.image = pygame.transform.scale(self.image, (scaled_w, scaled_h))
         self.rect = self.image.get_rect()
-        self.rect.centerx, _ = scaler.scale_pos(c.LANE_X_POSITION_BOXES[lane_idx], 0)
+        self.rect.centerx, _ = self.scaler.scale_pos(c.LANE_X_POSITION_BOXES[lane_idx], 0)
         self.rect.y = -self.rect.height
         self.vel_x = 0
         self.vel_y = 8

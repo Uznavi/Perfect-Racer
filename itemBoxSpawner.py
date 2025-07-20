@@ -5,7 +5,8 @@ import time
 from itemBox import ItemBox
 
 class ItemBoxSpawner():
-    def __init__(self):
+    def __init__(self, scaler):
+        self.scaler = scaler  # Store scaler for use in methods
         self.itemBox_group = pygame.sprite.Group()
         self.itemBox_spawn_timer = 15
         self.lastSpawnTime = time.time()
@@ -19,5 +20,5 @@ class ItemBoxSpawner():
     
     def spawnItemBox(self):
         for laneX in range(len(c.LANE_X_POSITION_BOXES)):
-            item_box = ItemBox(laneX)
+            item_box = ItemBox(laneX, self.scaler)
             self.itemBox_group.add(item_box)
