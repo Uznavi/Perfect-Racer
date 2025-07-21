@@ -4,14 +4,13 @@ from bullet import Bullet
 class PlayerCar(pygame.sprite.Sprite):
     def __init__(self, scaler):
         super(PlayerCar, self).__init__()
-        self.scaler = scaler  # Store scaler for use in methods
+        self.scaler = scaler
         self.image = pygame.image.load("assets/images/PlayerCar.png").convert_alpha()
-        DESIGN_CAR_WIDTH = 40 
-        DESIGN_CAR_HEIGHT = 85  # adjust as needed
-        scaled_w, scaled_h = self.scaler.scale_size(DESIGN_CAR_WIDTH, DESIGN_CAR_HEIGHT)
-        self.image = pygame.transform.scale(self.image, (scaled_w, scaled_h))
+        DESIGN_CAR_WIDTH = 40
+        DESIGN_CAR_HEIGHT = 85
+        self.image = pygame.transform.scale(self.image, (DESIGN_CAR_WIDTH, DESIGN_CAR_HEIGHT))
         self.rect = self.image.get_rect()
-        self.rect.centerx, self.rect.centery = self.scaler.scale_pos(665, 680)
+        self.rect.centerx, self.rect.centery = self.scaler.scale_pos(655, 680)
         self.bullets = pygame.sprite.Group()
         self.vel_x = 0 #initial speeds
         self.vel_y = 0
@@ -36,8 +35,8 @@ class PlayerCar(pygame.sprite.Sprite):
     def update(self):
         self.bullets.update()
         self.rect.centerx += self.vel_x
-        min_x, _ = self.scaler.scale_pos(540, 0)
-        max_x, _ = self.scaler.scale_pos(791, 0)
+        min_x, _ = self.scaler.scale_pos(530, 0)
+        max_x, _ = self.scaler.scale_pos(781, 0)
         _, min_y = self.scaler.scale_pos(0, 40)
         _, max_y = self.scaler.scale_pos(0, 680)
 

@@ -4,7 +4,7 @@ Welcome to the race track, where you have a huge task ahead of you! Avoid all yo
 
 CREDITS:
 Game developed by Eduardo IV Dotel Vega (@Uznavi)
-Additional help by Harry Y. Ruiz Figueroa (@harryto1)
+Additional help by Harry Y. Ruiz Figueroa (@harryto1) and Yamil Serrano (@Neowizen)
 Car models created by Aim Studios - https://aim-studios.itch.io/top-down-pixel-art-race-cars
 Item box model taken from Kenney's Pixel Platformer Assets pack - https://kenney.nl/assets/pixel-platformer
 Game over, shield, pausing and shooting sound effect taken from Kenney's Musical Jingles and Sci-Fi Sounds audio assets - https://kenney.nl/assets/sci-fi-sounds
@@ -15,4 +15,4 @@ Intro Song - Game Gaming Minecraft Background Music by original_soundtrack - fou
 New High Score Song - victory by freesound_community - found on https://pixabay.com/sound-effects/victory-96688/
 Explosion sound effect taken from https://creatorassets.com/a/8bit-explosion-sound-effects
 
-All assets are free for use, no copyright infringement was meant
+All assets were free to use, no copyright infringement was meant
