@@ -1,11 +1,12 @@
 import pygame
+from utilities import resource_path
 from bullet import Bullet
 
 class PlayerCar(pygame.sprite.Sprite):
     def __init__(self, scaler):
         super(PlayerCar, self).__init__()
         self.scaler = scaler
-        self.image = pygame.image.load("assets/images/PlayerCar.png").convert_alpha()
+        self.image = pygame.image.load(resource_path("assets/images/PlayerCar.png"))
         DESIGN_CAR_WIDTH = 40
         DESIGN_CAR_HEIGHT = 85
         self.image = pygame.transform.scale(self.image, (DESIGN_CAR_WIDTH, DESIGN_CAR_HEIGHT))

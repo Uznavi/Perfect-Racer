@@ -1,6 +1,7 @@
 import pygame
 import random
 import constants as c
+from utilities import resource_path
 
 enemyImages = [
     "assets/images/Mark 1 - Ash.png",
@@ -15,7 +16,7 @@ class Enemy(pygame.sprite.Sprite):
         super(Enemy, self).__init__()
         self.scaler = scaler  # Store scaler for use in methods
         imagePath = random.choice(enemyImages)
-        self.image = pygame.image.load(imagePath).convert_alpha()
+        self.image = pygame.image.load(resource_path(imagePath))
         DESIGN_CAR_WIDTH = 40 
         DESIGN_CAR_HEIGHT = 85
         scaled_w, scaled_h = self.scaler.scale_size(DESIGN_CAR_WIDTH, DESIGN_CAR_HEIGHT)

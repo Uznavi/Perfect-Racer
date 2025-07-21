@@ -12,7 +12,7 @@ from playerCar import PlayerCar
 from enemySpawner import EnemySpawner
 from itemBoxSpawner import ItemBoxSpawner
 from particles import Particle
-from utilities import drawText, blitScaled
+from utilities import drawText, blitScaled, resource_path
 
 def profile_game(screen, game_surface, clock, joystick, scaler):
     pr = cProfile.Profile()
@@ -29,13 +29,13 @@ def profile_game(screen, game_surface, clock, joystick, scaler):
 def gameOverScreen(screen, game_surface, clock, joystick, scaler, score):
     previousHighScore = loadHighScore()
     if score > previousHighScore:
-        pygame.mixer.music.load("assets/sounds/newHighScoreSong.mp3")
+        pygame.mixer.music.load(resource_path("assets/sounds/newHighScoreSong.mp3"))
         pygame.mixer.music.play()
         resultMessage = "You are the perfect racer! Congratulations!"
         saveHighScore(score)
     else:
         resultMessage = "You are not the perfect racer! Try again!"
-        pygame.mixer.music.load("assets/sounds/gameOverSong.ogg")
+        pygame.mixer.music.load(resource_path("assets/sounds/gameOverSong.ogg"))
         pygame.mixer.music.play()
     flashIndex = 0
     flashTimer = 0
@@ -69,7 +69,7 @@ def gameOverScreen(screen, game_surface, clock, joystick, scaler, score):
             return
 
 def pauseScreen(screen, game_surface, clock, joystick, scaler):
-    pygame.mixer.music.load("assets/sounds/pause.ogg")
+    pygame.mixer.music.load(resource_path("assets/sounds/pause.ogg"))
     pygame.mixer.music.play()
     paused = True
     overlay = pygame.Surface((c.game_width, c.game_height), pygame.SRCALPHA)
@@ -87,16 +87,17 @@ def pauseScreen(screen, game_surface, clock, joystick, scaler):
             sys.exit()
         elif action == "resume":
             pygame.mixer.music.stop()
-            pygame.mixer.music.load("assets/sounds/gameSong.mp3")
+            pygame.mixer.music.load(resource_path("assets/sounds/gameSong.mp3"))
             pygame.mixer.music.play(-1)
             return "resume"
 
 def playScreen(screen, game_surface, clock, joystick, scaler, cheatEnabled=False):
     pygame.display.set_caption("Game")
-    pygame.mixer.music.load("assets/sounds/gameSong.mp3")
+    pygame.mixer.music.load(resource_path("assets/sounds/gameSong.mp3"))
     pygame.mixer.music.play(-1)
-    hitSound = pygame.mixer.Sound("assets/sounds/explosion.wav")
-    imageSpriteSheet = pygame.image.load("assets/images/B i g  r o a d.png").convert_alpha()
+    hitSound = pygame.mixer.Sound(resource_path("assets/sounds/explosion.wav"))
+    imageSpriteSheet = pygame.image.load(resource_path("assets/images/B i g  r o a d.png")).convert_alpha()
+    #(origin of the name here: https://youtu.be/hkHCnZ5GrNc?si=0Yy55hdreEtIOZYR&t=714)
     spriteSheet = spritesheet.SpriteSheet(imageSpriteSheet)
     animationList = []
     for x in range(c.animationLoop):
@@ -263,7 +264,7 @@ def controlsMenu(screen, game_surface, clock, joystick, scaler):
 
 def mainMenu(screen, game_surface, clock, joystick, scaler):
     pygame.display.set_caption("Main Menu")
-    pygame.mixer.music.load("assets/sounds/introSong.mp3")
+    pygame.mixer.music.load(resource_path("assets/sounds/introSong.mp3"))
     pygame.mixer.music.play()
     colorIndex = 0
     frameCounter = 0

@@ -1,12 +1,22 @@
 import pygame
 import constants as c
+import sys
+import os
 
 font_cache = {}
 text_cache = {}
 
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        base_path = sys._MEIPASS  # PyInstaller sets this attr
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 def get_font(fontSize):
     if fontSize not in font_cache:
-        font_cache[fontSize] = pygame.font.Font("assets/font/PressStart2P.ttf", fontSize)
+        font_cache[fontSize] = pygame.font.Font(resource_path("assets/font/PressStart2P.ttf"), fontSize)
     return font_cache[fontSize]
 
 def get_cached_text(text, fontSize, textCol):
@@ -17,7 +27,7 @@ def get_cached_text(text, fontSize, textCol):
         text_cache[key] = text_surface
     return text_cache[key]
 
-def drawText(text, fontSize, textCol, x, y, surface, scaler):
+def drawText(text, fontSize, textCol, x, y, surface, scaler, align="center"):
     text_surface = get_cached_text(text, fontSize, textCol)
     surface.blit(text_surface, scaler.scale_pos(x,y))
 
