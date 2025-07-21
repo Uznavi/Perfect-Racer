@@ -14,7 +14,7 @@ else:
     joystick = None
 
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-scaler = GameScaler(c.game_width, c.game_height, screen)
+scaler = GameScaler(screen.get_width(), screen.get_height(), screen) # Use the actual screen dimensions for the scaler :3
 game_surface = pygame.Surface((c.game_width, c.game_height))
 
 if __name__ == "__main__":
