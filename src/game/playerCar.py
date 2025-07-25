@@ -1,6 +1,6 @@
 import pygame
-from utilities import resource_path
-from bullet import Bullet
+from src.utilities import resource_path
+from src.game.bullet import Bullet
 
 class PlayerCar(pygame.sprite.Sprite):
     def __init__(self, scaler):

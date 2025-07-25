@@ -1,7 +1,7 @@
 import pygame
 import random
-import constants as c
-from utilities import resource_path
+import src.system.constants as c
+from src.utilities import resource_path
 
 enemyImages = [
     "assets/images/Mark 1 - Ash.png",

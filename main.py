@@ -1,7 +1,7 @@
 import pygame
-import constants as c
-from scaler import GameScaler
-from screens import mainMenu, profile_game
+import src.system.constants as c
+from src.system.scaler import GameScaler
+from src.system.screens import mainMenu, profile_game
 
 pygame.init()
 pygame.mixer.init()
