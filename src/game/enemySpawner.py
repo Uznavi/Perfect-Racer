@@ -1,7 +1,7 @@
 import pygame
 import random
-import constants as c
-from enemyCar import Enemy
+import src.system.constants as c
+from src.game.enemyCar import Enemy
 
 class EnemySpawner:
     def __init__(self, scaler):

@@ -1,8 +1,8 @@
 import pygame
 import random
-import constants as c
+import src.system.constants as c
 import time
-from itemBox import ItemBox
+from src.game.itemBox import ItemBox
 
 class ItemBoxSpawner():
     def __init__(self, scaler):
