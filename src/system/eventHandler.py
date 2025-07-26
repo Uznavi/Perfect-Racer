@@ -1,5 +1,5 @@
 import pygame
-import constants as c
+import src.system.constants as c
 import time
 
 cheatInput = []

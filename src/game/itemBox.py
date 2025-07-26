@@ -1,7 +1,7 @@
 import pygame
 import random
-import constants as c
-from utilities import resource_path
+import src.system.constants as c
+from src.utilities import resource_path
 
 class ItemBox(pygame.sprite.Sprite):
     def __init__(self, lane_idx, scaler):

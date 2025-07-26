@@ -1,18 +1,18 @@
 import pygame
 import sys
-import constants as c
+import src.system.constants as c
 import cProfile
 import io
 import pstats
 import time
-from scoreSystem import loadHighScore, saveHighScore
-import eventHandler
-import spritesheet
-from playerCar import PlayerCar
-from enemySpawner import EnemySpawner
-from itemBoxSpawner import ItemBoxSpawner
-from particles import Particle
-from utilities import drawText, blitScaled, resource_path
+from src.system.scoreSystem import loadHighScore, saveHighScore
+import src.system.eventHandler as eventHandler
+import src.game.spritesheet as spritesheet
+from src.game.playerCar import PlayerCar
+from src.game.enemySpawner import EnemySpawner
+from src.game.itemBoxSpawner import ItemBoxSpawner
+from src.game.particles import Particle
+from src.utilities import drawText, blitScaled, resource_path
 
 def profile_game(screen, game_surface, clock, joystick, scaler):
     pr = cProfile.Profile()
