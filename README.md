@@ -15,4 +15,4 @@ Welcome to the race track, where you have a huge task ahead of you! Avoid all yo
 - New High Score Song - victory by freesound_community - found on https://pixabay.com/sound-effects/victory-96688/
 - Explosion sound effect taken from https://creatorassets.com/a/8bit-explosion-sound-effects
 
--All assets were free to use, no copyright infringement was meant
+All assets were free to use, no copyright infringement was meant
