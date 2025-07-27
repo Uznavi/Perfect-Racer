@@ -14,7 +14,7 @@ enemyImages = [
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, lane_idx, scaler):
         super(Enemy, self).__init__()
-        self.scaler = scaler  # Store scaler for use in methods
+        self.scaler = scaler
         imagePath = random.choice(enemyImages)
         self.image = pygame.image.load(resource_path(imagePath))
         DESIGN_CAR_WIDTH = 40 

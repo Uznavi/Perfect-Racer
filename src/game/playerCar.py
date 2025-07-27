@@ -13,9 +13,9 @@ class PlayerCar(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx, self.rect.centery = self.scaler.scale_pos(655, 680)
         self.bullets = pygame.sprite.Group()
-        self.vel_x = 0 #initial speeds
+        self.vel_x = 0 
         self.vel_y = 0
-        self.speed = 5 # Speed of movement, will be changed depending on the feel
+        self.speed = 5
         self.powerUpReceived = None
         self.shieldActive = False
         self.shieldTimer = 10

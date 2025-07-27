@@ -5,7 +5,7 @@ from src.game.enemyCar import Enemy
 
 class EnemySpawner:
     def __init__(self, scaler):
-        self.scaler = scaler  # Store scaler for use in methods
+        self.scaler = scaler
         self.enemy_group = pygame.sprite.Group()
         self.spawn_timer = random.randrange(30, 60)
     

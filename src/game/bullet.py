@@ -3,7 +3,7 @@ import pygame
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, scaler):
         super(Bullet, self).__init__()
-        self.scaler = scaler  # Store scaler for use in methods
+        self.scaler = scaler 
         self.width = 8
         self.height = 16
         scaled_w, scaled_h = self.scaler.scale_size(self.width, self.height)

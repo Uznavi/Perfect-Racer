@@ -6,7 +6,7 @@ from src.game.itemBox import ItemBox
 
 class ItemBoxSpawner():
     def __init__(self, scaler):
-        self.scaler = scaler  # Store scaler for use in methods
+        self.scaler = scaler 
         self.itemBox_group = pygame.sprite.Group()
         self.itemBox_spawn_timer = 15
         self.lastSpawnTime = time.time()

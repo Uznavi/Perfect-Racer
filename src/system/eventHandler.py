@@ -10,6 +10,7 @@ def handle_main_menu_events():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             return "quit", cheatMode
+        #Cheat code verification
         if event.type == pygame.KEYDOWN:
             keyMap = {
                 pygame.K_w: "up",
@@ -49,7 +50,7 @@ def handle_main_menu_events():
                     cheatInput.pop(0)
                 if cheatInput == cheatCode:
                     cheatMode = True
-
+            # End of cheat code verification
             if event.button == c.NS_START:
                 return "play", cheatMode
             if event.button == c.NS_SELECT:
@@ -112,7 +113,7 @@ def handle_pause_screen_events():
 
 def handle_gameplay_events(player, showHitboxes):
     for event in pygame.event.get():
-        # Keyboard input
+        # Keyboard input for movement
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
                 return "pause", showHitboxes
@@ -124,6 +125,7 @@ def handle_gameplay_events(player, showHitboxes):
                 player.vel_y = -player.speed
             if event.key == pygame.K_s:
                 player.vel_y = player.speed
+            # Power Up functionality
             if event.key == pygame.K_y:
                 if player.powerUpReceived == "shield" and not player.shieldActive:
                     player.shieldActive = True
@@ -132,7 +134,6 @@ def handle_gameplay_events(player, showHitboxes):
                     player.shieldSound.play()
                     player.shieldSoundPlayed = True
                     player.powerUpReceived = None
-                    # player.powerUpReceived = None
                 elif player.powerUpReceived == "bomb":
                     player.bombActive = True
                     return "bomb", showHitboxes
@@ -144,6 +145,7 @@ def handle_gameplay_events(player, showHitboxes):
                 elif player.bulletsActive:
                     player.shoot()
                 player.powerUpReceived = None
+            #DEBUG FEATURE
             if event.key == pygame.K_h:
                 showHitboxes = not showHitboxes
             if event.key == pygame.K_ESCAPE:
@@ -171,6 +173,7 @@ def handle_gameplay_events(player, showHitboxes):
 
         # D-Pad movement (button down)
         if event.type == pygame.JOYBUTTONDOWN:
+            #Power Up functionality for controllers
             if event.button == c.NS_Y or event.button == c.PS_SQUARE:
                 if player.powerUpReceived == "shield" and not player.shieldActive:
                     player.shieldActive = True
