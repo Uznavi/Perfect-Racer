@@ -14,11 +14,9 @@ LANE_X_POSITION = [530, 615, 655, 695, 781]
 LANE_X_POSITION_BOXES = [530, 615, 695, 781]
 #LEGEND: 
 # F.L = Far left
-# F.M.L = Far Middle Left
 # C.L = Center Left
 # C = Center
 # C.R = Center Rigth
-# F.M.R = Far Middle Right
 # F.R = Far Right
 POWER_UPS = ["shield", "bullets", "bomb"]
 
